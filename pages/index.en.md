@@ -9,7 +9,8 @@ import styles from './style.module.sass';
 
 <button className={styles.button}>SASS, CSS modules, JSX inside Markdown</button>
 
-I am going to the movies today.
+I am going to the movies today. Testing how the deployment works. 
+
 
 {/* Check out https://nextra.site/docs/guide/syntax-highlighting */}
 
