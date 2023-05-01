@@ -1,6 +1,5 @@
 const withNextra = require('nextra')({
   // Tell Nextra to use the custom theme as the layout
-  theme: 'nextra-theme-blog',
   themeConfig: './theme.config.jsx',
 })
 
