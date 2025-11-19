@@ -35,14 +35,12 @@ export function ParticleBackground() {
 
         // Update exclusion zones
         const updateExclusionRects = () => {
-            const ids = ['intro-section', 'hacker-section', 'zeta-section'];
-            exclusionRectsRef.current = ids
-                .map(id => {
-                    const element = document.getElementById(id);
-                    if (!element) return null;
+            const elements = document.getElementsByClassName('particle-exclusion');
+            exclusionRectsRef.current = Array.from(elements)
+                .map(element => {
                     const rect = element.getBoundingClientRect();
                     // Add padding to the exclusion zone
-                    const padding = 20;
+                    const padding = 30;
                     return new DOMRect(
                         rect.left - padding,
                         rect.top - padding,
@@ -147,7 +145,7 @@ export function ParticleBackground() {
                     particle.targetOpacity = 0;
                 }
 
-                // 2. Exclusion Zone Interaction (Magnetic Boundary)
+                // 2. Exclusion Zone Interaction (Smooth Boundary)
                 rects.forEach(rect => {
                     // Calculate distance to nearest point on rectangle
                     const nearestX = Math.max(rect.left, Math.min(particle.x, rect.right));
@@ -156,37 +154,28 @@ export function ParticleBackground() {
                     const distDy = particle.y - nearestY;
                     const dist = Math.sqrt(distDx * distDx + distDy * distDy);
 
-                    // Check if inside (dist is 0 if inside because nearest point is the point itself)
-                    // But we need to handle "inside" explicitly for robust repulsion
                     const isInside = particle.x >= rect.left && particle.x <= rect.right &&
                         particle.y >= rect.top && particle.y <= rect.bottom;
 
-                    if (isInside) {
-                        // STRONG Repulsion if inside - push to nearest edge
-                        const distToLeft = particle.x - rect.left;
-                        const distToRight = rect.right - particle.x;
-                        const distToTop = particle.y - rect.top;
-                        const distToBottom = rect.bottom - particle.y;
+                    if (isInside || dist < 40) {
+                        // Smooth repulsion force (gets stronger as you get closer)
+                        const repulsionStrength = isInside ? 1.0 : Math.max(0, 1 - dist / 40);
 
-                        const min = Math.min(distToLeft, distToRight, distToTop, distToBottom);
-
-                        // Push out quickly
-                        if (min === distToLeft) particle.vx -= 2;
-                        else if (min === distToRight) particle.vx += 2;
-                        else if (min === distToTop) particle.vy -= 2;
-                        else particle.vy += 2;
-
-                    } else if (dist < 60) { // Magnetic/Resistance zone
-                        // "Trying to enter but not able to"
-                        // 1. Attraction towards box (trying to enter)
-                        const angleToBox = Math.atan2(nearestY - particle.y, nearestX - particle.x);
-                        particle.vx += Math.cos(angleToBox) * 0.05; // Weak attraction
-                        particle.vy += Math.sin(angleToBox) * 0.05;
-
-                        // 2. Strong resistance at the very edge (not able to)
-                        if (dist < 20) {
-                            particle.vx -= Math.cos(angleToBox) * 0.2; // Resistance
-                            particle.vy -= Math.sin(angleToBox) * 0.2;
+                        if (dist > 0.1) { // Avoid division by zero
+                            const repulsionForce = repulsionStrength * 0.3; // Gentle force
+                            particle.vx += (distDx / dist) * repulsionForce;
+                            particle.vy += (distDy / dist) * repulsionForce;
+                        } else if (isInside) {
+                            // If exactly on the edge, push away from center
+                            const centerX = (rect.left + rect.right) / 2;
+                            const centerY = (rect.top + rect.bottom) / 2;
+                            const toCenterDx = particle.x - centerX;
+                            const toCenterDy = particle.y - centerY;
+                            const toCenterDist = Math.sqrt(toCenterDx * toCenterDx + toCenterDy * toCenterDy);
+                            if (toCenterDist > 0.1) {
+                                particle.vx += (toCenterDx / toCenterDist) * 0.3;
+                                particle.vy += (toCenterDy / toCenterDist) * 0.3;
+                            }
                         }
                     }
                 });

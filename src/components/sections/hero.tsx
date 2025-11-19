@@ -26,7 +26,6 @@ export function Hero({ delay = 0 }: HeroProps) {
                     },
                 }}
                 className="space-y-8"
-                id="intro-section"
             >
                 <motion.div
                     variants={{
@@ -96,7 +95,7 @@ export function Hero({ delay = 0 }: HeroProps) {
                     </span>
                 </motion.div>
 
-                <div className="pt-4 text-lg leading-relaxed text-neutral-700 dark:text-neutral-300 space-y-4">
+                <div className="pt-4 text-lg leading-relaxed text-neutral-700 dark:text-neutral-300 space-y-4 particle-exclusion">
                     {RESUME_DATA.profile.map((paragraph, index) => (
                         <motion.p
                             key={index}

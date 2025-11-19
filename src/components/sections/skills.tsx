@@ -19,7 +19,7 @@ export function Skills({ delay = 0 }: SkillsProps) {
                 <h2 className="text-4xl font-serif font-light tracking-tight hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-neutral-900 hover:via-neutral-600 hover:to-neutral-900 dark:hover:from-white dark:hover:via-neutral-400 dark:hover:to-white transition-all duration-300 cursor-default w-fit">
                     Core Skills
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 particle-exclusion">
                     {RESUME_DATA.coreSkills.map((skill, index) => (
                         <div key={index}>
                             <h3 className="text-xl font-serif font-medium mb-3">{skill.title}</h3>
@@ -35,7 +35,7 @@ export function Skills({ delay = 0 }: SkillsProps) {
                 <h2 className="text-4xl font-serif font-light tracking-tight hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-neutral-900 hover:via-neutral-600 hover:to-neutral-900 dark:hover:from-white dark:hover:via-neutral-400 dark:hover:to-white transition-all duration-300 cursor-default w-fit">
                     Technical Skills
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 particle-exclusion">
                     {Object.entries(RESUME_DATA.technicalSkills).map(([category, skills], index) => (
                         <div key={index}>
                             <h3 className="text-sm font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">
