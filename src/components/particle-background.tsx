@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface Particle {
     x: number;
@@ -22,7 +22,7 @@ export function ParticleBackground() {
     const mouseRef = useRef({ x: -1000, y: -1000 });
     const animationFrameRef = useRef<number | undefined>(undefined);
     const scrollTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-    const [isScrolling, setIsScrolling] = useState(false);
+    const isScrollingRef = useRef(false);
     const { theme } = useTheme();
 
     useEffect(() => {
@@ -73,7 +73,7 @@ export function ParticleBackground() {
 
         // Scroll handler - hide particles during scroll
         const handleScroll = () => {
-            setIsScrolling(true);
+            isScrollingRef.current = true;
 
             // Clear existing timeout
             if (scrollTimeoutRef.current) {
@@ -82,7 +82,7 @@ export function ParticleBackground() {
 
             // Show particles again after scroll stops
             scrollTimeoutRef.current = setTimeout(() => {
-                setIsScrolling(false);
+                isScrollingRef.current = false;
             }, 150);
         };
 
@@ -91,7 +91,7 @@ export function ParticleBackground() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Skip rendering if scrolling
-            if (isScrolling) {
+            if (isScrollingRef.current) {
                 animationFrameRef.current = requestAnimationFrame(animate);
                 return;
             }
@@ -100,79 +100,65 @@ export function ParticleBackground() {
             const isDark = theme === "dark";
 
             particlesRef.current.forEach((particle) => {
-                // Calculate distance from mouse
+                // Mouse interaction
                 const dx = mouse.x - particle.x;
                 const dy = mouse.y - particle.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                const maxDistance = 180; // Larger interaction radius
+                const maxDistance = 180; // Interaction radius
 
-                // Reveal particles near mouse
+                // Shimmer effect
+                particle.shimmer += 0.02; // Slower shimmer
+                const shimmerOpacity = (Math.sin(particle.shimmer) + 1) / 2;
+
                 if (distance < maxDistance) {
-                    particle.targetOpacity = (1 - distance / maxDistance) * 0.8; // Higher opacity
-
-                    // Very subtle push - reduced force
+                    const forceDirectionX = dx / distance;
+                    const forceDirectionY = dy / distance;
                     const force = (maxDistance - distance) / maxDistance;
-                    const angle = Math.atan2(dy, dx);
-                    particle.vx -= Math.cos(angle) * force * 0.15; // Reduced from 0.5
-                    particle.vy -= Math.sin(angle) * force * 0.15;
+                    const directionX = forceDirectionX * force * 2; // Slower push
+                    const directionY = forceDirectionY * force * 2;
+
+                    particle.vx -= directionX;
+                    particle.vy -= directionY;
+                    particle.targetOpacity = 1;
                 } else {
                     particle.targetOpacity = 0;
                 }
 
-                // Smooth opacity transition - slower
-                particle.opacity += (particle.targetOpacity - particle.opacity) * 0.05; // Reduced from 0.1
-
-                // Apply velocity
+                // Physics
+                particle.vx *= 0.92; // Stronger friction
+                particle.vy *= 0.92;
                 particle.x += particle.vx;
                 particle.y += particle.vy;
 
-                // Return to base position - gentler
-                particle.vx += (particle.baseX - particle.x) * 0.02; // Reduced from 0.05
-                particle.vy += (particle.baseY - particle.y) * 0.02;
+                // Return to base
+                const baseDx = particle.baseX - particle.x;
+                const baseDy = particle.baseY - particle.y;
+                particle.x += baseDx * 0.05; // Slower return
+                particle.y += baseDy * 0.05;
 
-                // Stronger damping for slower movement
-                particle.vx *= 0.85; // Reduced from 0.9
-                particle.vy *= 0.85;
-
-                // Update shimmer
-                particle.shimmer += 0.02;
+                // Opacity transition
+                particle.opacity += (particle.targetOpacity - particle.opacity) * 0.05; // Slower fade
 
                 // Draw particle
                 if (particle.opacity > 0.01) {
-                    // Shimmer effect
-                    const shimmerIntensity = Math.sin(particle.shimmer) * 0.3 + 0.7;
-
                     ctx.beginPath();
                     ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
 
-                    // Color based on theme
                     if (isDark) {
-                        // Dark mode: subtle blue-white
-                        const distanceRatio = Math.min(distance / maxDistance, 1);
-                        const hue = 200;
-                        const saturation = 40 - distanceRatio * 20;
-                        const lightness = 70 + (1 - distanceRatio) * 20;
-                        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * shimmerIntensity})`;
+                        // Dark mode: Blue-white glow
+                        const alpha = particle.opacity * (0.3 + shimmerOpacity * 0.2); // 0.3-0.5 opacity
+                        ctx.fillStyle = `hsla(200, 100%, 80%, ${alpha})`;
+                        ctx.shadowBlur = 15 * particle.opacity;
+                        ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity})`;
                     } else {
-                        // Light mode: darker, more visible particles
-                        const distanceRatio = Math.min(distance / maxDistance, 1);
-                        const hue = 210;
-                        const saturation = 25 - distanceRatio * 10;
-                        const lightness = 30 + distanceRatio * 15; // Darker for visibility
-                        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * shimmerIntensity * 0.7})`; // Higher opacity
-                    }
-
-                    ctx.fill();
-
-                    // Add subtle glow
-                    if (particle.opacity > 0.3) {
-                        ctx.shadowBlur = 3;
-                        ctx.shadowColor = isDark ? 'rgba(200, 220, 255, 0.3)' : 'rgba(80, 100, 120, 0.4)'; // Stronger glow in light mode
-                        ctx.fill();
+                        // Light mode: Subtle gray-blue
+                        const alpha = particle.opacity * (0.4 + shimmerOpacity * 0.2); // 0.4-0.6 opacity
+                        ctx.fillStyle = `hsla(210, 20%, 30%, ${alpha})`;
                         ctx.shadowBlur = 0;
                     }
+                    ctx.fill();
 
-                    // Draw very subtle connections to nearby particles
+                    // Draw connections
                     particlesRef.current.forEach((otherParticle) => {
                         if (particle === otherParticle) return;
 
@@ -219,7 +205,7 @@ export function ParticleBackground() {
                 clearTimeout(scrollTimeoutRef.current);
             }
         };
-    }, [theme, isScrolling]);
+    }, [theme]);
 
     return (
         <canvas
