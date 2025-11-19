@@ -23,6 +23,7 @@ export function ParticleBackground() {
     const animationFrameRef = useRef<number | undefined>(undefined);
     const scrollTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
     const isScrollingRef = useRef(false);
+    const exclusionRectsRef = useRef<DOMRect[]>([]);
     const { theme } = useTheme();
 
     useEffect(() => {
@@ -32,10 +33,19 @@ export function ParticleBackground() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
+        // Update exclusion zones
+        const updateExclusionRects = () => {
+            const ids = ['intro-section', 'hacker-section', 'zeta-section'];
+            exclusionRectsRef.current = ids
+                .map(id => document.getElementById(id)?.getBoundingClientRect())
+                .filter((rect): rect is DOMRect => !!rect);
+        };
+
         // Set canvas size
         const resizeCanvas = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            updateExclusionRects();
             initParticles();
         };
 
@@ -82,6 +92,7 @@ export function ParticleBackground() {
 
             // Show particles again after scroll stops
             scrollTimeoutRef.current = setTimeout(() => {
+                updateExclusionRects(); // Update positions of exclusion zones
                 isScrollingRef.current = false;
             }, 150);
         };
@@ -98,6 +109,7 @@ export function ParticleBackground() {
 
             const mouse = mouseRef.current;
             const isDark = theme === "dark";
+            const rects = exclusionRectsRef.current;
 
             particlesRef.current.forEach((particle) => {
                 // Mouse interaction
@@ -122,6 +134,53 @@ export function ParticleBackground() {
                 } else {
                     particle.targetOpacity = 0;
                 }
+
+                // 2. Exclusion Zone Interaction (Magnetic Boundary)
+                rects.forEach(rect => {
+                    // Calculate distance to nearest point on rectangle
+                    const nearestX = Math.max(rect.left, Math.min(particle.x, rect.right));
+                    const nearestY = Math.max(rect.top, Math.min(particle.y, rect.bottom));
+                    const distDx = particle.x - nearestX;
+                    const distDy = particle.y - nearestY;
+                    const dist = Math.sqrt(distDx * distDx + distDy * distDy);
+
+                    // Check if inside (dist is 0 if inside because nearest point is the point itself)
+                    // But we need to handle "inside" explicitly for robust repulsion
+                    const isInside = particle.x >= rect.left && particle.x <= rect.right &&
+                        particle.y >= rect.top && particle.y <= rect.bottom;
+
+                    if (isInside) {
+                        // STRONG Repulsion if inside - push to nearest edge
+                        const distToLeft = particle.x - rect.left;
+                        const distToRight = rect.right - particle.x;
+                        const distToTop = particle.y - rect.top;
+                        const distToBottom = rect.bottom - particle.y;
+
+                        const min = Math.min(distToLeft, distToRight, distToTop, distToBottom);
+
+                        // Push out quickly
+                        if (min === distToLeft) particle.vx -= 2;
+                        else if (min === distToRight) particle.vx += 2;
+                        else if (min === distToTop) particle.vy -= 2;
+                        else particle.vy += 2;
+
+                    } else if (dist < 60) { // Magnetic/Resistance zone
+                        // "Trying to enter but not able to"
+                        // 1. Attraction towards box (trying to enter)
+                        const angleToBox = Math.atan2(nearestY - particle.y, nearestX - particle.x);
+                        particle.vx += Math.cos(angleToBox) * 0.05; // Weak attraction
+                        particle.vy += Math.sin(angleToBox) * 0.05;
+
+                        // 2. Strong resistance at the very edge (not able to)
+                        if (dist < 20) {
+                            particle.vx -= Math.cos(angleToBox) * 0.2; // Resistance
+                            particle.vy -= Math.sin(angleToBox) * 0.2;
+
+                            // Glow effect at boundary
+                            particle.targetOpacity = Math.max(particle.targetOpacity, 0.8);
+                        }
+                    }
+                });
 
                 // Physics
                 particle.vx *= 0.92; // Friction

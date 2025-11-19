@@ -26,6 +26,7 @@ export function Hero({ delay = 0 }: HeroProps) {
                     },
                 }}
                 className="space-y-8"
+                id="intro-section"
             >
                 <motion.div
                     variants={{

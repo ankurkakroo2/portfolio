@@ -23,6 +23,7 @@ export function Experience({ delay = 0 }: ExperienceProps) {
                 {RESUME_DATA.experience.map((role, index) => (
                     <div
                         key={index}
+                        id={role.company.toLowerCase().includes('hacker') ? 'hacker-section' : role.company.toLowerCase().includes('zeta') ? 'zeta-section' : undefined}
                         className="group relative pl-8 border-l border-neutral-200 dark:border-neutral-800"
                     >
                         <div className="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-neutral-200 dark:bg-neutral-800 group-hover:bg-black dark:group-hover:bg-white transition-colors duration-300" />
