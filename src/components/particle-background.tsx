@@ -24,6 +24,7 @@ export function ParticleBackground() {
     const scrollTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
     const isScrollingRef = useRef(false);
     const exclusionRectsRef = useRef<DOMRect[]>([]);
+    const exclusionElementsRef = useRef<Element[]>([]);
     const { theme } = useTheme();
 
     useEffect(() => {
@@ -33,22 +34,25 @@ export function ParticleBackground() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        // Update exclusion zones
-        const updateExclusionRects = () => {
+        // Cache exclusion zone elements (query DOM once)
+        const cacheExclusionElements = () => {
             const elements = document.getElementsByClassName('particle-exclusion');
-            exclusionRectsRef.current = Array.from(elements)
+            exclusionElementsRef.current = Array.from(elements);
+        };
+
+        // Update exclusion zone positions (no DOM query, just getBoundingClientRect)
+        const updateExclusionRects = () => {
+            const padding = 30;
+            exclusionRectsRef.current = exclusionElementsRef.current
                 .map(element => {
                     const rect = element.getBoundingClientRect();
-                    // Add padding to the exclusion zone
-                    const padding = 30;
                     return new DOMRect(
                         rect.left - padding,
                         rect.top - padding,
                         rect.width + (padding * 2),
                         rect.height + (padding * 2)
                     );
-                })
-                .filter((rect): rect is DOMRect => !!rect);
+                });
         };
 
         // Set canvas size
@@ -93,7 +97,10 @@ export function ParticleBackground() {
 
         // Scroll handler - hide particles during scroll
         const handleScroll = () => {
-            isScrollingRef.current = true;
+            // Only set scrolling flag if not already scrolling (reduces redundant state changes)
+            if (!isScrollingRef.current) {
+                isScrollingRef.current = true;
+            }
 
             // Clear existing timeout
             if (scrollTimeoutRef.current) {
@@ -244,6 +251,7 @@ export function ParticleBackground() {
             animationFrameRef.current = requestAnimationFrame(animate);
         };
 
+        cacheExclusionElements();
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
         window.addEventListener("mousemove", handleMouseMove);
