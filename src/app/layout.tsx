@@ -71,7 +71,7 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
+          storageKey="portfolio-theme"
         >
           {children}
           {/* Uncomment after adding OPENAI_API_KEY to .env.local */}
