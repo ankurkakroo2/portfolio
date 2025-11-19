@@ -208,11 +208,11 @@ export function ParticleBackground() {
                     ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
 
                     if (isDark) {
-                        // Dark mode: Blue-white glow
+                        // Dark mode: Blue-white glow (optimized shadows)
                         const alpha = particle.opacity * (0.3 + shimmerOpacity * 0.2); // 0.3-0.5 opacity
                         ctx.fillStyle = `hsla(200, 100%, 80%, ${alpha})`;
-                        ctx.shadowBlur = 15 * particle.opacity;
-                        ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity})`;
+                        ctx.shadowBlur = 8 * particle.opacity; // Reduced from 15 to 8
+                        ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity * 0.5})`; // Lighter shadow
                     } else {
                         // Light mode: Subtle gray-blue
                         const alpha = particle.opacity * (0.4 + shimmerOpacity * 0.2); // 0.4-0.6 opacity
@@ -220,6 +220,11 @@ export function ParticleBackground() {
                         ctx.shadowBlur = 0;
                     }
                     ctx.fill();
+
+                    // Reset shadow for next particle (performance optimization)
+                    if (isDark) {
+                        ctx.shadowBlur = 0;
+                    }
 
                     // Draw connections
                     particlesRef.current.forEach((otherParticle) => {
