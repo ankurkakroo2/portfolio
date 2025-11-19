@@ -107,37 +107,36 @@ export function ParticleBackground() {
                 const maxDistance = 180; // Interaction radius
 
                 // Shimmer effect
-                particle.shimmer += 0.02; // Slower shimmer
+                particle.shimmer += 0.02;
                 const shimmerOpacity = (Math.sin(particle.shimmer) + 1) / 2;
 
                 if (distance < maxDistance) {
-                    const forceDirectionX = dx / distance;
-                    const forceDirectionY = dy / distance;
-                    const force = (maxDistance - distance) / maxDistance;
-                    const directionX = forceDirectionX * force * 2; // Slower push
-                    const directionY = forceDirectionY * force * 2;
+                    // Soft boundary: Opacity fades out as distance increases
+                    particle.targetOpacity = (1 - distance / maxDistance) * 0.8;
 
-                    particle.vx -= directionX;
-                    particle.vy -= directionY;
-                    particle.targetOpacity = 1;
+                    // Gentler push
+                    const force = (maxDistance - distance) / maxDistance;
+                    const angle = Math.atan2(dy, dx);
+                    particle.vx -= Math.cos(angle) * force * 0.15; // Gentle force
+                    particle.vy -= Math.sin(angle) * force * 0.15;
                 } else {
                     particle.targetOpacity = 0;
                 }
 
                 // Physics
-                particle.vx *= 0.92; // Stronger friction
+                particle.vx *= 0.92; // Friction
                 particle.vy *= 0.92;
                 particle.x += particle.vx;
                 particle.y += particle.vy;
 
-                // Return to base
+                // Return to base - gentle spring
                 const baseDx = particle.baseX - particle.x;
                 const baseDy = particle.baseY - particle.y;
-                particle.x += baseDx * 0.05; // Slower return
+                particle.x += baseDx * 0.05;
                 particle.y += baseDy * 0.05;
 
                 // Opacity transition
-                particle.opacity += (particle.targetOpacity - particle.opacity) * 0.05; // Slower fade
+                particle.opacity += (particle.targetOpacity - particle.opacity) * 0.05;
 
                 // Draw particle
                 if (particle.opacity > 0.01) {
