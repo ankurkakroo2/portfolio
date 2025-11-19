@@ -37,7 +37,19 @@ export function ParticleBackground() {
         const updateExclusionRects = () => {
             const ids = ['intro-section', 'hacker-section', 'zeta-section'];
             exclusionRectsRef.current = ids
-                .map(id => document.getElementById(id)?.getBoundingClientRect())
+                .map(id => {
+                    const element = document.getElementById(id);
+                    if (!element) return null;
+                    const rect = element.getBoundingClientRect();
+                    // Add padding to the exclusion zone
+                    const padding = 20;
+                    return new DOMRect(
+                        rect.left - padding,
+                        rect.top - padding,
+                        rect.width + (padding * 2),
+                        rect.height + (padding * 2)
+                    );
+                })
                 .filter((rect): rect is DOMRect => !!rect);
         };
 
