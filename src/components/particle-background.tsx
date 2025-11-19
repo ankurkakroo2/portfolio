@@ -199,8 +199,8 @@ export function ParticleBackground() {
                 particle.x += baseDx * 0.05;
                 particle.y += baseDy * 0.05;
 
-                // Opacity transition
-                particle.opacity += (particle.targetOpacity - particle.opacity) * 0.05;
+                // Opacity transition (fast response to mouse)
+                particle.opacity += (particle.targetOpacity - particle.opacity) * 0.2;
 
                 // Draw particle
                 if (particle.opacity > 0.01) {
