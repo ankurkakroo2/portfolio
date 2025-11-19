@@ -175,9 +175,6 @@ export function ParticleBackground() {
                         if (dist < 20) {
                             particle.vx -= Math.cos(angleToBox) * 0.2; // Resistance
                             particle.vy -= Math.sin(angleToBox) * 0.2;
-
-                            // Glow effect at boundary
-                            particle.targetOpacity = Math.max(particle.targetOpacity, 0.8);
                         }
                     }
                 });
