@@ -1,17 +1,18 @@
 import { ThemeProvider } from "@/components/theme-provider";
 // import { ChatWidget } from "@/components/chat-widget"; // Uncomment after adding OPENAI_API_KEY to .env.local
 import type { Metadata } from "next";
-import { Geist_Mono, Lora } from "next/font/google";
+import { Fraunces, Geist } from "next/font/google";
 import "./globals.css";
 
-const lora = Lora({
-  variable: "--font-lora",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
+  axes: ["SOFT", "WONK", "opsz"], // Enable variable axes for character
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
   display: "swap",
 });
@@ -64,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${lora.variable} ${geistMono.variable} antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-300`}
+        className={`${fraunces.variable} ${geist.variable} antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-300`}
       >
         <ThemeProvider
           attribute="class"
