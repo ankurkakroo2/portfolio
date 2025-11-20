@@ -33,5 +33,5 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif), "Times New Roman", serif !important;
+  font-family: var(--font-lora), "Times New Roman", serif !important;
 }
