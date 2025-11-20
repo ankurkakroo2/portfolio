@@ -13,6 +13,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-serif: var(--font-lora);
 }
 
 .dark {
@@ -32,5 +33,5 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif), serif;
+  font-family: var(--font-serif), "Times New Roman", serif !important;
 }
