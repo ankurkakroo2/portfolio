@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
 // import { ChatWidget } from "@/components/chat-widget"; // Uncomment after adding OPENAI_API_KEY to .env.local
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Geist } from "next/font/google";
+import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 
 const cormorantGaramond = Cormorant_Garamond({
@@ -12,8 +12,8 @@ const cormorantGaramond = Cormorant_Garamond({
   display: "swap",
 });
 
-const geist = Geist({
-  variable: "--font-geist",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
   display: "swap",
 });
@@ -66,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${cormorantGaramond.variable} ${geist.variable} antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-300`}
+        className={`${cormorantGaramond.variable} ${montserrat.variable} antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-300`}
       >
         <ThemeProvider
           attribute="class"
