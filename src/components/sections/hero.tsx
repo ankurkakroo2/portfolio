@@ -49,9 +49,9 @@ export function Hero({ delay = 0 }: HeroProps) {
                             hidden: { opacity: 0, y: 20 },
                             visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                         }}
-                        className="text-5xl md:text-7xl font-serif font-bold tracking-tight relative w-fit group mx-auto"
+                        className="text-5xl md:text-7xl font-serif font-bold tracking-tight relative w-fit mx-auto"
                     >
-                        <span className="relative z-10 group-hover:text-neutral-600 dark:group-hover:text-neutral-400 transition-colors duration-500">
+                        <span className="relative z-10">
                             {RESUME_DATA.name}
                         </span>
                     </motion.h1>

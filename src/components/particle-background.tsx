@@ -23,6 +23,7 @@ export function ParticleBackground() {
     const animationFrameRef = useRef<number | undefined>(undefined);
     const scrollTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
     const isScrollingRef = useRef(false);
+    const fadeInProgressRef = useRef(1); // 0 = fully hidden, 1 = fully visible
     const exclusionRectsRef = useRef<DOMRect[]>([]);
     const exclusionElementsRef = useRef<Element[]>([]);
     const { theme } = useTheme();
@@ -100,6 +101,7 @@ export function ParticleBackground() {
             // Only set scrolling flag if not already scrolling (reduces redundant state changes)
             if (!isScrollingRef.current) {
                 isScrollingRef.current = true;
+                fadeInProgressRef.current = 0; // Start fade-out
             }
 
             // Clear existing timeout
@@ -111,6 +113,7 @@ export function ParticleBackground() {
             scrollTimeoutRef.current = setTimeout(() => {
                 updateExclusionRects(); // Update positions of exclusion zones
                 isScrollingRef.current = false;
+                // fadeInProgress will gradually increase in animate loop
             }, 150);
         };
 
@@ -122,6 +125,11 @@ export function ParticleBackground() {
             if (isScrollingRef.current) {
                 animationFrameRef.current = requestAnimationFrame(animate);
                 return;
+            }
+
+            // Smooth fade-in after scroll stops
+            if (fadeInProgressRef.current < 1) {
+                fadeInProgressRef.current = Math.min(1, fadeInProgressRef.current + 0.05); // Gradual fade-in
             }
 
             const mouse = mouseRef.current;
@@ -209,13 +217,13 @@ export function ParticleBackground() {
 
                     if (isDark) {
                         // Dark mode: Blue-white glow (optimized shadows)
-                        const alpha = particle.opacity * (0.3 + shimmerOpacity * 0.2); // 0.3-0.5 opacity
+                        const alpha = particle.opacity * fadeInProgressRef.current * (0.3 + shimmerOpacity * 0.2);
                         ctx.fillStyle = `hsla(200, 100%, 80%, ${alpha})`;
-                        ctx.shadowBlur = 8 * particle.opacity; // Reduced from 15 to 8
-                        ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity * 0.5})`; // Lighter shadow
+                        ctx.shadowBlur = 8 * particle.opacity * fadeInProgressRef.current;
+                        ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity * fadeInProgressRef.current * 0.5})`;
                     } else {
                         // Light mode: Subtle gray-blue
-                        const alpha = particle.opacity * (0.4 + shimmerOpacity * 0.2); // 0.4-0.6 opacity
+                        const alpha = particle.opacity * fadeInProgressRef.current * (0.4 + shimmerOpacity * 0.2);
                         ctx.fillStyle = `hsla(210, 20%, 30%, ${alpha})`;
                         ctx.shadowBlur = 0;
                     }

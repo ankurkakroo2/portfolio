@@ -15,7 +15,7 @@ export function Experience({ delay = 0 }: ExperienceProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: delay }}
         >
-            <h2 className="text-4xl font-serif font-light tracking-tight hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-neutral-900 hover:via-neutral-600 hover:to-neutral-900 dark:hover:from-white dark:hover:via-neutral-400 dark:hover:to-white transition-all duration-300 cursor-default w-fit">
+            <h2 className="text-4xl font-serif font-light tracking-tight w-fit">
                 Experience
             </h2>
 
