@@ -15,7 +15,7 @@ export function Experience({ delay = 0 }: ExperienceProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: delay }}
         >
-            <h2 className="text-4xl font-serif italic font-light tracking-tight w-fit">
+            <h2 className="text-4xl font-serif font-light tracking-tight w-fit">
                 Experience
             </h2>
 

@@ -16,7 +16,7 @@ export function Skills({ delay = 0 }: SkillsProps) {
             transition={{ duration: 0.6, delay: delay }}
         >
             <div className="space-y-12">
-                <h2 className="text-4xl font-serif italic font-light tracking-tight w-fit">
+                <h2 className="text-4xl font-serif font-light tracking-tight w-fit">
                     Core Skills
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 particle-exclusion">
@@ -32,7 +32,7 @@ export function Skills({ delay = 0 }: SkillsProps) {
             </div>
 
             <div className="space-y-12">
-                <h2 className="text-4xl font-serif italic font-light tracking-tight w-fit">
+                <h2 className="text-4xl font-serif font-light tracking-tight w-fit">
                     Technical Skills
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10 particle-exclusion">
