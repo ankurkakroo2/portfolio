@@ -1,13 +1,14 @@
 import { ThemeProvider } from "@/components/theme-provider";
 // import { ChatWidget } from "@/components/chat-widget"; // Uncomment after adding OPENAI_API_KEY to .env.local
 import type { Metadata } from "next";
-import { Geist, Instrument_Serif } from "next/font/google";
+import { Cormorant_Garamond, Geist } from "next/font/google";
 import "./globals.css";
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument",
+const cormorantGaramond = Cormorant_Garamond({
+  variable: "--font-garamond",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -65,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${instrumentSerif.variable} ${geist.variable} antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-300`}
+        className={`${cormorantGaramond.variable} ${geist.variable} antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-300`}
       >
         <ThemeProvider
           attribute="class"

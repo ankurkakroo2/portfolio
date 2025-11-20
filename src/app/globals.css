@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: var(--font-instrument);
+  --font-serif: var(--font-garamond);
   --font-sans: var(--font-geist);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -13,7 +13,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-serif: var(--font-instrument);
+  --font-serif: var(--font-garamond);
 }
 
 .dark {
@@ -33,5 +33,5 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-instrument), serif !important;
+  font-family: var(--font-garamond), serif !important;
 }
