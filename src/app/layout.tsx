@@ -1,8 +1,7 @@
-```typescript
 import { ThemeProvider } from "@/components/theme-provider";
 // import { ChatWidget } from "@/components/chat-widget"; // Uncomment after adding OPENAI_API_KEY to .env.local
 import type { Metadata } from "next";
-import { Outfit, Geist } from "next/font/google";
+import { Geist, Outfit } from "next/font/google";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -65,7 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${ outfit.variable } ${ geist.variable } antialiased bg - white dark: bg - black text - black dark: text - white transition - colors duration - 300`}
+        className={`${outfit.variable} ${geist.variable} antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-300`}
       >
         <ThemeProvider
           attribute="class"
