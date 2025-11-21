@@ -29,9 +29,9 @@ export const RESUME_DATA = {
         },
     ],
     technicalSkills: {
-        "Systems": "System Design, Microservices, CI/CD, Observability",
+        "Systems": "System Design, Microservices, CI/CD, Observability, RAG, MCP, LLMs",
         "Languages": "JavaScript, Python, Ruby",
-        "Frameworks": "React, Node.js, Next.js, Nest, RoR",
+        "Frameworks": "React, Node.js, Next.js, Nest, RoR, FastAPI, Langchain",
         "Datastores": "MySQL, Redis, MongoDB",
         "Cloud": "AWS, GCP, Azure",
     },
