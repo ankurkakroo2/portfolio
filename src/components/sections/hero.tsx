@@ -60,7 +60,7 @@ export function Hero({ delay = 0 }: HeroProps) {
                             hidden: { opacity: 0, y: 20 },
                             visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                         }}
-                        className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 font-serif font-medium tracking-[0.2em] uppercase text-center mt-4"
+                        className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 font-serif font-medium tracking-[0.2em] uppercase text-center mt-4"
                     >
                         {RESUME_DATA.title}
                     </motion.h2>
