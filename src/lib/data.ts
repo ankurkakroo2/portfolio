@@ -7,7 +7,7 @@ export const RESUME_DATA = {
         linkedin: "https://www.linkedin.com/in/akakro/",
     },
     profile: [
-        "I am an asymmetric engineering leader with a strong business, product, and design sense. I think in second order, which shapes how I hire, build teams, and make decisions.",
+        "I’m an asymmetric engineering leader for the AI era with strong business, product, and design sense. I think in second order, which shapes how I hire, build teams, and make decisions.",
         "I maintain a high bar for quality, whether it is maintaining talent density, the clarity of a document, the copy in an error message, or a UI detail that is off. I have experience in both B2C and B2B products, including building from zero to one. I care deeply about platforms and over the years I have built several that are both reliable and scalable.",
     ],
     coreSkills: [
@@ -29,9 +29,9 @@ export const RESUME_DATA = {
         },
     ],
     technicalSkills: {
-        "Systems": "System Design, Microservices, CI/CD, Observability, RAG, MCP, LLMs",
+        "Systems": "System Design, Microservices, CI/CD, Observability, Vector DBs, RAG, MCP, LLMs",
         "Languages": "JavaScript, Python, Ruby",
-        "Frameworks": "React, Node.js, Next.js, Nest, RoR, FastAPI, Langchain",
+        "Frameworks": "FastAPI, Node.js, React, Next.js, Nest, RoR, Langchain",
         "Datastores": "MySQL, Redis, MongoDB",
         "Cloud": "AWS, GCP, Azure",
     },
