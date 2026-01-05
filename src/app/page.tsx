@@ -5,15 +5,13 @@ import { Education } from "@/components/sections/education";
 import { Experience } from "@/components/sections/experience";
 import { Hero } from "@/components/sections/hero";
 import { Skills } from "@/components/sections/skills";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Navigation } from "@/components/navigation";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-white dark:bg-black transition-colors duration-300 relative">
       <ParticleBackground />
-      <div className="fixed top-6 right-6 z-50">
-        <ThemeToggle />
-      </div>
+      <Navigation />
 
       <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
         <Hero delay={0} />
