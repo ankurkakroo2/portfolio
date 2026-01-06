@@ -7,15 +7,16 @@ import React from "react";
 interface GlassCardProps extends HTMLMotionProps<"div"> {
     children: React.ReactNode;
     className?: string;
+    delay?: number;
 }
 
-export function GlassCard({ children, className, ...props }: GlassCardProps) {
+export function GlassCard({ children, className, delay = 0, ...props }: GlassCardProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay }}
             className={cn(
                 "relative overflow-hidden rounded-xl border border-white/20 bg-white/5 p-6 backdrop-blur-md",
                 "dark:border-white/10 dark:bg-black/20",
