@@ -16,7 +16,7 @@ interface LogsClientProps {
 
 export function LogsClient({ logs }: LogsClientProps) {
   return (
-    <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
+    <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10 flex-grow">
       <div className="py-20 md:py-28 particle-exclusion">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -33,11 +33,21 @@ export function LogsClient({ logs }: LogsClientProps) {
         </motion.div>
 
         {logs.length === 0 ? (
-          <div className="text-center text-neutral-500 dark:text-neutral-400">
-            No logs yet. Check back soon!
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="py-20 text-center"
+          >
+            <p className="text-lg text-neutral-400 dark:text-neutral-500 mb-4">
+              No logs yet
+            </p>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-sm mx-auto">
+              This is where weekly progress goes. Use the <code className="text-xs bg-neutral-100 dark:bg-neutral-900 px-2 py-1 rounded">/add-log</code> skill to start documenting.
+            </p>
+          </motion.div>
         ) : (
-          <div className="space-y-16">
+          <div className="space-y-16 pb-12">
             {logs.map((log, index) => (
               <LogEntry
                 key={log.filename}
@@ -48,10 +58,6 @@ export function LogsClient({ logs }: LogsClientProps) {
             ))}
           </div>
         )}
-
-        <footer className="py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
-          <p>© {new Date().getFullYear()} Ankur Kakroo. All rights reserved.</p>
-        </footer>
       </div>
     </div>
   );
