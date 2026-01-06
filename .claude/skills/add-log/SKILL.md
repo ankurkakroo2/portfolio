@@ -1,30 +1,79 @@
 ---
 name: add-log
-description: Creates weekly progress logs documenting what you shipped, why you built it, and what stuck with you. Triggers on "add log", "log entry", "weekly log", "activity log", or just whenever you feel like documenting the chaos.
+description: Creates weekly progress logs that read like thinking out loud. Chaotic but readable. Mix of short punchy sentences and longer thoughts. Triggers on "add log", "log entry", "weekly log", "activity log", or whenever you need to document the week.
 ---
 
 # Weekly Progress Logger
 
-So you built stuff this week. Or debugged it. Maybe both. This skill helps you capture that in a way that actually feels like you wrote it, not like you're filling out a performance review form at gunpoint.
+So you built stuff this week. Or debugged it. Maybe both. This skill captures it in a way that actually sounds like you thinking, not like HR wrote it.
 
-When you're ready to log it, just ask me to add a log entry for the week. I'll ask you three things: what actually happened (dump URLs, links, whatever context you've got—I'll make it flow naturally), why you were doing it (the real reason, not the ticket summary), and what stuck with you (what you learned, what surprised you, what made you go "oh *that's* how that works").
+## How to Use
 
-The log gets dropped into `src/content/logs/` with today's date as the filename in YYYY-MM-DD.md format. It's paragraph-based, casual as hell, and should read like you wrote it over coffee while explaining your week to someone who actually cares.
+Ask me: `/add-log` or "add a log entry for this week"
 
-Here's roughly how it'll look:
+I'll ask for three things:
+1. What actually happened (dump URLs, code references, folder links—raw context welcome)
+2. Why you were doing it (the real reason, not corporate-speak)
+3. What stuck with you (what you learned, what surprised you, what made you go "oh *that's* how that works")
 
-```markdown
-# Week of [Date]
+## Writing Style (This is Important)
 
-[Continuous prose about what happened, why it mattered, and what you learned. Links woven in naturally. No forced structure, just... you explaining your week.]
-```
+The logs follow a specific voice. Think: **thinking out loud while typing.**
 
-The vibe is: sharp, dry humor welcome. Real thoughts. Nothing that smells like it was optimized for LinkedIn. Keep it to about a page, but don't force it—if you've got more to say, say it.
+### Sentence Structure
+Mix short punchy sentences with longer ones. This creates rhythm and feels natural.
 
-A good log reads like this: "Refactored the particle background to use Canvas because the DOM was getting demolished on lower-end devices. Took way longer than expected because we also standardized naming conventions across the project. Funny how much faster you move when everyone's pulling from the same playbook. Learned that the real performance win isn't always code—sometimes it's just everyone knowing what variables are supposed to be called."
+**Short sentences for impact:**
+- "Went deep into LLMs. Proper deep."
+- "Why?"
+- "In practice? Garbage."
+- "Chunk size selection? Feels like art. Pure vibes."
 
-A bad log reads like this: "Performed performance optimization and established coding standards resulting in enhanced team efficiency metrics." (Please don't do that.)
+**Longer sentences for context:**
+- "Like, sat down with Andrej Karpathy's video and didn't surface for hours."
+- "Once you understand *why* embeddings work (semantic compression of meaning), debugging gets way faster."
+
+### Tone Elements
+- **Conversational asides**: "(mistake? feature? still unclear)", "if you want to follow the rabbit holes"
+- **Self-questioning**: Ask rhetorical questions. "Why?" "Then what?" "In practice?"
+- **Sharp dry humor**: "Building on sand sucks." "Pure vibes." "Good problems to have."
+- **Thinking markers**: "But here's the thing—", "Like,", "Then", "So"
+- **Real frustration/joy**: Don't sanitize. "Garbage." "Elegant." "Weird."
+
+### What NOT to Do
+- No corporate jargon ("enhanced metrics", "synergy", "stakeholders")
+- No "I focused on..." (use "focused on" or just describe it)
+- No forced structure or bullet lists
+- No polish that sounds like LinkedIn
+- No "learnings" or "takeaways" labels—just say what you learned
+
+### Structure (Loose, Not Rigid)
+Just start writing. No heading. Straight into the prose.
+
+Paragraph 1: What happened (the work, the exploration, the building)
+Paragraph 2: Why it mattered (the real reason, the intent)
+Paragraph 3: What stuck (the chaos, the contradictions, the real insight)
+
+But honestly? Let it flow. If it needs 4 paragraphs, do 4. If 2 works, do 2.
+
+## Example (Reference)
+
+Went deep into LLMs. Proper deep. Like, sat down with Andrej Karpathy's 'Intro to LLMs' and didn't surface for hours. The whole pretraining flow: tokenization, embeddings in high-dimensional space, transformers doing attention, softmax sampling. Then post-training—where the magic happens. RLHF, hallucinations, fine-tuning. The entire spectrum.
+
+Why? Building on sand sucks. If you're going to touch LLMs, the mental model comes first. Not the 'throw a prompt at the API and pray' version. The actual version. Layer by layer.
+
+Then I built stuff. Started with embeddings (OpenAI's text-embedding-3-small), realized I needed vector similarity so I implemented cosine vs Euclidean, set up ChromaDB, tested chunking strategies because I was curious (mistake? feature? unclear). Glued it into an end-to-end RAG pipeline.
+
+Real takeaway: theory and code don't hold hands. Chunking strategies brilliant on a whiteboard? Garbage in practice. But once you understand *why* embeddings work, debugging gets fast. You know what lever to pull. Also made me want to understand RL and DPO. There's a lot here. Good problems to have."
 
 ---
 
-Trigger: `/add-log` or just say "add a log entry for this week" and I'll know what's up.
+**Length**: ~1 page. Don't force it shorter or longer. Natural length.
+
+**Links**: Weave URLs naturally into sentences, don't list them separately.
+
+**Vibe**: You explaining your week to someone who actually cares. Sharp. Honest. Sometimes chaotic. Always readable.
+
+---
+
+Ready? `/add-log`

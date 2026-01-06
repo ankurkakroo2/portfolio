@@ -1,5 +1,5 @@
-import { ParticleBackground } from "@/components/particle-background";
 import { Navigation } from "@/components/navigation";
+import { ParticleBackground } from "@/components/particle-background";
 import { getLogs } from "@/lib/logs";
 import { LogsClient } from "./logs-client";
 
