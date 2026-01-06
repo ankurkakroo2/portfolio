@@ -1,4 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { Navigation } from "@/components/navigation";
+import { ParticleBackground } from "@/components/particle-background";
 // import { ChatWidget } from "@/components/chat-widget"; // Uncomment after adding OPENAI_API_KEY to .env.local
 import type { Metadata } from "next";
 import { Geist, Outfit } from "next/font/google";
@@ -72,6 +74,8 @@ export default function RootLayout({
           enableSystem
           storageKey="portfolio-theme"
         >
+          <ParticleBackground />
+          <Navigation />
           {children}
           {/* Uncomment after adding OPENAI_API_KEY to .env.local */}
           {/* <ChatWidget /> */}

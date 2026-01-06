@@ -1,18 +1,13 @@
 "use client";
 
-import { ParticleBackground } from "@/components/particle-background";
 import { Education } from "@/components/sections/education";
 import { Experience } from "@/components/sections/experience";
 import { Hero } from "@/components/sections/hero";
 import { Skills } from "@/components/sections/skills";
-import { Navigation } from "@/components/navigation";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-white dark:bg-black transition-colors duration-300 relative">
-      <ParticleBackground />
-      <Navigation />
-
       <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
         <Hero delay={0} />
         <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
