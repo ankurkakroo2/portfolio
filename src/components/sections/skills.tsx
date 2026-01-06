@@ -10,20 +10,20 @@ interface SkillsProps {
 export function Skills({ delay = 0 }: SkillsProps) {
     return (
         <motion.section
-            className="py-20 space-y-12"
+            className="py-12 md:py-20 space-y-10 md:space-y-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: delay }}
         >
-            <div className="space-y-12">
-                <h2 className="text-4xl font-serif font-light tracking-tight w-fit">
+            <div className="space-y-8 md:space-y-12">
+                <h2 className="text-3xl md:text-4xl font-serif font-light tracking-tight w-fit">
                     Core Skills
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 particle-exclusion">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 md:gap-y-10 particle-exclusion">
                     {RESUME_DATA.coreSkills.map((skill, index) => (
                         <div key={index}>
-                            <h3 className="text-xl font-serif font-medium mb-3">{skill.title}</h3>
-                            <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                            <h3 className="text-lg md:text-xl font-serif font-medium mb-2 md:mb-3">{skill.title}</h3>
+                            <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
                                 {skill.description}
                             </p>
                         </div>
@@ -31,17 +31,17 @@ export function Skills({ delay = 0 }: SkillsProps) {
                 </div>
             </div>
 
-            <div className="space-y-12">
-                <h2 className="text-4xl font-serif font-light tracking-tight w-fit">
+            <div className="space-y-8 md:space-y-12">
+                <h2 className="text-3xl md:text-4xl font-serif font-light tracking-tight w-fit">
                     Technical Skills
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 particle-exclusion">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 particle-exclusion">
                     {Object.entries(RESUME_DATA.technicalSkills).map(([category, skills], index) => (
                         <div key={index}>
-                            <h3 className="text-sm font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">
+                            <h3 className="text-xs md:text-sm font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3 md:mb-4">
                                 {category}
                             </h3>
-                            <p className="text-lg text-neutral-800 dark:text-neutral-200 leading-relaxed">
+                            <p className="text-base md:text-lg text-neutral-800 dark:text-neutral-200 leading-relaxed">
                                 {skills}
                             </p>
                         </div>

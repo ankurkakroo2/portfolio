@@ -13,7 +13,7 @@ export default function Home() {
       <ParticleBackground />
       <Navigation />
 
-      <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
+      <div className="container mx-auto px-4 md:px-12 max-w-4xl relative z-10">
         <Hero delay={0} />
         <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
         <Experience delay={0.5} />

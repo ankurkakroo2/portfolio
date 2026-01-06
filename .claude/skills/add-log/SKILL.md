@@ -37,8 +37,9 @@ Mix short punchy sentences with longer ones. This creates rhythm and feels natur
 - **Conversational asides**: "(mistake? feature? still unclear)", "if you want to follow the rabbit holes"
 - **Self-questioning**: Ask rhetorical questions. "Why?" "Then what?" "In practice?"
 - **Sharp dry humor**: "Building on sand sucks." "Pure vibes." "Good problems to have."
-- **Thinking markers**: "But here's the thing—", "Like,", "Then", "So"
+- **Thinking markers**: "But here's the thing:", "Like,", "Then", "So"
 - **Real frustration/joy**: Don't sanitize. "Garbage." "Elegant." "Weird."
+- **Simple punctuation**: Use commas, colons, periods. No em-dashes (—). Keep it clean.
 
 ### What NOT to Do
 - No corporate jargon ("enhanced metrics", "synergy", "stakeholders")
@@ -58,7 +59,7 @@ But honestly? Let it flow. If it needs 4 paragraphs, do 4. If 2 works, do 2.
 
 ## Example (Reference)
 
-Went deep into LLMs. Proper deep. Like, sat down with Andrej Karpathy's 'Intro to LLMs' and didn't surface for hours. The whole pretraining flow: tokenization, embeddings in high-dimensional space, transformers doing attention, softmax sampling. Then post-training—where the magic happens. RLHF, hallucinations, fine-tuning. The entire spectrum.
+Went deep into LLMs. Proper deep. Like, sat down with Andrej Karpathy's 'Intro to LLMs' and didn't surface for hours. The whole pretraining flow: tokenization, embeddings in high-dimensional space, transformers doing attention, softmax sampling. Then post-training, where the magic happens. RLHF, hallucinations, fine-tuning. The entire spectrum.
 
 Why? Building on sand sucks. If you're going to touch LLMs, the mental model comes first. Not the 'throw a prompt at the API and pray' version. The actual version. Layer by layer.
 
