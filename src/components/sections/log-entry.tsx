@@ -31,6 +31,16 @@ export function LogEntry({ date, content, delay }: LogEntryProps) {
                 {children}
               </p>
             ),
+            a: ({ href, children }) => (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600/80 dark:text-blue-400/70 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200 underline decoration-blue-600/30 dark:decoration-blue-400/30 underline-offset-2"
+              >
+                {children}
+              </a>
+            ),
           }}
         >
           {content}
