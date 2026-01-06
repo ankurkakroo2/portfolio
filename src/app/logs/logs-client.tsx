@@ -25,10 +25,10 @@ export function LogsClient({ logs }: LogsClientProps) {
           className="mb-16"
         >
           <h1 className="text-4xl md:text-5xl font-serif font-light tracking-tight mb-4">
-            Activity Log
+            Log
           </h1>
-          <p className="text-neutral-500 dark:text-neutral-400">
-            A running log of what I've been working on
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            Personal projects and experiments
           </p>
         </motion.div>
 
@@ -37,7 +37,7 @@ export function LogsClient({ logs }: LogsClientProps) {
             No logs yet. Check back soon!
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="space-y-16">
             {logs.map((log, index) => (
               <LogEntry
                 key={log.filename}
