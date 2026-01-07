@@ -7,7 +7,7 @@ import { Skills } from "@/components/sections/skills";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white dark:bg-black transition-colors duration-300 relative">
+    <main className="min-h-screen transition-colors duration-300 relative">
       <div className="container mx-auto px-6 md:px-12 max-w-4xl relative">
         <Hero delay={0} />
         <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
