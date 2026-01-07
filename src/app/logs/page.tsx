@@ -7,7 +7,7 @@ export default async function LogsPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-black transition-colors duration-300 relative flex flex-col">
       <LogsClient logs={logs} />
-      <footer className="mt-auto py-6 text-center text-sm text-neutral-500 dark:text-neutral-400 relative z-10">
+      <footer className="mt-auto py-6 text-center text-sm text-neutral-500 dark:text-neutral-400 relative">
         <p>© {new Date().getFullYear()} Ankur Kakroo. All rights reserved.</p>
       </footer>
     </main>
