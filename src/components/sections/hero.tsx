@@ -2,7 +2,7 @@
 
 import { RESUME_DATA } from "@/lib/data";
 import { motion } from "framer-motion";
-import { Linkedin, Mail, MapPin } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 
 interface HeroProps {
     delay?: number;
@@ -79,6 +79,15 @@ export function Hero({ delay = 0 }: HeroProps) {
                     >
                         <Mail className="h-4 w-4" />
                         {RESUME_DATA.contact.email}
+                    </a>
+                    <a
+                        href={RESUME_DATA.contact.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                        <Github className="h-4 w-4" />
+                        GitHub
                     </a>
                     <a
                         href={RESUME_DATA.contact.linkedin}
