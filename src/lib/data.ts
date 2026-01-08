@@ -3,6 +3,7 @@ export const RESUME_DATA = {
     title: "Director of Engineering",
     contact: {
         email: "ankurkakroo2@gmail.com",
+        github: "https://github.com/ankurkakroo2",
         location: "Gurugram, India",
         linkedin: "https://www.linkedin.com/in/akakro/",
     },
