@@ -31,6 +31,23 @@ export function LogEntry({ date, content, delay }: LogEntryProps) {
                 {children}
               </p>
             ),
+            pre: ({ children }) => (
+              <pre className="overflow-x-auto rounded-lg bg-neutral-100 dark:bg-neutral-900 p-4 mb-4 text-sm">
+                {children}
+              </pre>
+            ),
+            code: ({ className, children, ...props }) => {
+              const isInline = !className;
+              return isInline ? (
+                <code className="bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-sm" {...props}>
+                  {children}
+                </code>
+              ) : (
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              );
+            },
           }}
         >
           {content}
