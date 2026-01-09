@@ -16,7 +16,7 @@ interface LogsClientProps {
 
 export function LogsClient({ logs }: LogsClientProps) {
   return (
-    <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10 flex-grow">
+    <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10 flex-grow logs-content [&_a]:text-blue-600/60 [&_a]:dark:text-blue-400/50 [&_a]:no-underline [&_a]:hover:text-blue-600/80 [&_a]:dark:hover:text-blue-400/70">
       <div className="py-20 md:py-28 particle-exclusion">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
