@@ -5,13 +5,14 @@ import { motion } from "framer-motion";
 
 interface EducationProps {
     delay?: number;
+    shouldAnimate?: boolean;
 }
 
-export function Education({ delay = 0 }: EducationProps) {
+export function Education({ delay = 0, shouldAnimate = true }: EducationProps) {
     return (
         <motion.section
             className="py-20 space-y-12"
-            initial={{ opacity: 0, y: 20 }}
+            initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: delay }}
         >

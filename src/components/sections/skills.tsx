@@ -5,13 +5,14 @@ import { motion } from "framer-motion";
 
 interface SkillsProps {
     delay?: number;
+    shouldAnimate?: boolean;
 }
 
-export function Skills({ delay = 0 }: SkillsProps) {
+export function Skills({ delay = 0, shouldAnimate = true }: SkillsProps) {
     return (
         <motion.section
             className="py-20 space-y-12"
-            initial={{ opacity: 0, y: 20 }}
+            initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: delay }}
         >

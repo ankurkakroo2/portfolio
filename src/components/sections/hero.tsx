@@ -6,13 +6,14 @@ import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 
 interface HeroProps {
     delay?: number;
+    shouldAnimate?: boolean;
 }
 
-export function Hero({ delay = 0 }: HeroProps) {
+export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
     return (
         <section className="py-20 md:py-28">
             <motion.div
-                initial="hidden"
+                initial={shouldAnimate ? "hidden" : false}
                 animate="visible"
                 variants={{
                     hidden: { opacity: 0 },

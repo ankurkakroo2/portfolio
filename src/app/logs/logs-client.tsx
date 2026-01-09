@@ -1,6 +1,7 @@
 "use client";
 
 import { LogEntry } from "@/components/sections/log-entry";
+import { usePageAnimation } from "@/lib/page-animation";
 import { motion } from "framer-motion";
 
 interface Log {
@@ -15,11 +16,13 @@ interface LogsClientProps {
 }
 
 export function LogsClient({ logs }: LogsClientProps) {
+  const shouldAnimate = usePageAnimation("logs");
+
   return (
     <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10 flex-grow logs-content [&_a]:text-blue-600/60 [&_a]:dark:text-blue-400/50 [&_a]:no-underline [&_a]:hover:text-blue-600/80 [&_a]:dark:hover:text-blue-400/70">
       <div className="py-20 md:py-28 particle-exclusion">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="mb-16"
@@ -34,7 +37,7 @@ export function LogsClient({ logs }: LogsClientProps) {
 
         {logs.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="py-20 text-center"
@@ -54,6 +57,7 @@ export function LogsClient({ logs }: LogsClientProps) {
                 date={log.date}
                 content={log.content}
                 delay={0.2 + index * 0.1}
+                shouldAnimate={shouldAnimate}
               />
             ))}
           </div>

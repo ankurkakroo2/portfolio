@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 interface Particle {
@@ -26,7 +27,26 @@ export function ParticleBackground() {
     const fadeInProgressRef = useRef(1); // 0 = fully hidden, 1 = fully visible
     const exclusionRectsRef = useRef<DOMRect[]>([]);
     const exclusionElementsRef = useRef<Element[]>([]);
+    const animationPauseUntilRef = useRef(0);
+    const pauseClearedRef = useRef(false);
+    const delayedPathsRef = useRef(new Set<string>());
     const { theme } = useTheme();
+    const pathname = usePathname();
+
+    useEffect(() => {
+        if (delayedPathsRef.current.has(pathname)) {
+            return;
+        }
+
+        delayedPathsRef.current.add(pathname);
+        const delayMs = pathname === "/" ? 2200 : pathname === "/logs" ? 1800 : 0;
+        if (delayMs > 0) {
+            animationPauseUntilRef.current = Math.max(
+                animationPauseUntilRef.current,
+                performance.now() + delayMs
+            );
+        }
+    }, [pathname]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -119,6 +139,16 @@ export function ParticleBackground() {
 
         // Animation loop
         const animate = () => {
+            if (performance.now() < animationPauseUntilRef.current) {
+                if (!pauseClearedRef.current) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    pauseClearedRef.current = true;
+                }
+                animationFrameRef.current = requestAnimationFrame(animate);
+                return;
+            }
+
+            pauseClearedRef.current = false;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Skip rendering if scrolling
@@ -135,19 +165,29 @@ export function ParticleBackground() {
             const mouse = mouseRef.current;
             const isDark = theme === "dark";
             const rects = exclusionRectsRef.current;
+            const particles = particlesRef.current;
+            const particleCount = particles.length;
+            const maxDistance = 180; // Interaction radius
+            const maxDistanceSq = maxDistance * maxDistance;
+            const exclusionDistance = 40;
+            const exclusionDistanceSq = exclusionDistance * exclusionDistance;
+            const connectionDistance = 50;
+            const connectionDistanceSq = connectionDistance * connectionDistance;
+            const fadeInProgress = fadeInProgressRef.current;
 
-            particlesRef.current.forEach((particle) => {
+            for (let i = 0; i < particleCount; i++) {
+                const particle = particles[i];
                 // Mouse interaction
                 const dx = mouse.x - particle.x;
                 const dy = mouse.y - particle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                const maxDistance = 180; // Interaction radius
+                const distanceSq = dx * dx + dy * dy;
 
                 // Shimmer effect
                 particle.shimmer += 0.02;
                 const shimmerOpacity = (Math.sin(particle.shimmer) + 1) / 2;
 
-                if (distance < maxDistance) {
+                if (distanceSq < maxDistanceSq) {
+                    const distance = Math.sqrt(distanceSq);
                     // Soft boundary: Opacity fades out as distance increases
                     particle.targetOpacity = (1 - distance / maxDistance) * 0.8;
 
@@ -161,20 +201,22 @@ export function ParticleBackground() {
                 }
 
                 // 2. Exclusion Zone Interaction (Smooth Boundary)
-                rects.forEach(rect => {
+                for (let r = 0; r < rects.length; r++) {
+                    const rect = rects[r];
                     // Calculate distance to nearest point on rectangle
                     const nearestX = Math.max(rect.left, Math.min(particle.x, rect.right));
                     const nearestY = Math.max(rect.top, Math.min(particle.y, rect.bottom));
                     const distDx = particle.x - nearestX;
                     const distDy = particle.y - nearestY;
-                    const dist = Math.sqrt(distDx * distDx + distDy * distDy);
+                    const distSq = distDx * distDx + distDy * distDy;
 
                     const isInside = particle.x >= rect.left && particle.x <= rect.right &&
                         particle.y >= rect.top && particle.y <= rect.bottom;
 
-                    if (isInside || dist < 40) {
+                    if (isInside || distSq < exclusionDistanceSq) {
+                        const dist = Math.sqrt(distSq);
                         // Smooth repulsion force (gets stronger as you get closer)
-                        const repulsionStrength = isInside ? 1.0 : Math.max(0, 1 - dist / 40);
+                        const repulsionStrength = isInside ? 1.0 : Math.max(0, 1 - dist / exclusionDistance);
 
                         if (dist > 0.1) { // Avoid division by zero
                             const repulsionForce = repulsionStrength * 0.3; // Gentle force
@@ -193,7 +235,7 @@ export function ParticleBackground() {
                             }
                         }
                     }
-                });
+                }
 
                 // Physics
                 particle.vx *= 0.92; // Friction
@@ -217,13 +259,13 @@ export function ParticleBackground() {
 
                     if (isDark) {
                         // Dark mode: Blue-white glow (optimized shadows)
-                        const alpha = particle.opacity * fadeInProgressRef.current * (0.3 + shimmerOpacity * 0.2);
+                        const alpha = particle.opacity * fadeInProgress * (0.3 + shimmerOpacity * 0.2);
                         ctx.fillStyle = `hsla(200, 100%, 80%, ${alpha})`;
-                        ctx.shadowBlur = 8 * particle.opacity * fadeInProgressRef.current;
-                        ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity * fadeInProgressRef.current * 0.5})`;
+                        ctx.shadowBlur = 8 * particle.opacity * fadeInProgress;
+                        ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity * fadeInProgress * 0.5})`;
                     } else {
                         // Light mode: Subtle gray-blue
-                        const alpha = particle.opacity * fadeInProgressRef.current * (0.4 + shimmerOpacity * 0.2);
+                        const alpha = particle.opacity * fadeInProgress * (0.4 + shimmerOpacity * 0.2);
                         ctx.fillStyle = `hsla(210, 20%, 30%, ${alpha})`;
                         ctx.shadowBlur = 0;
                     }
@@ -235,31 +277,36 @@ export function ParticleBackground() {
                     }
 
                     // Draw connections
-                    particlesRef.current.forEach((otherParticle) => {
-                        if (particle === otherParticle) return;
+                    if (particle.opacity > 0.2) {
+                        for (let j = 0; j < particleCount; j++) {
+                            if (j === i) continue;
+                            const otherParticle = particles[j];
+                            if (otherParticle.opacity <= 0.2) continue;
 
-                        const pdx = particle.x - otherParticle.x;
-                        const pdy = particle.y - otherParticle.y;
-                        const pdist = Math.sqrt(pdx * pdx + pdy * pdy);
+                            const pdx = particle.x - otherParticle.x;
+                            const pdy = particle.y - otherParticle.y;
+                            const pdistSq = pdx * pdx + pdy * pdy;
 
-                        if (pdist < 50 && particle.opacity > 0.2 && otherParticle.opacity > 0.2) { // Longer connections
-                            ctx.beginPath();
-                            ctx.moveTo(particle.x, particle.y);
-                            ctx.lineTo(otherParticle.x, otherParticle.y);
-                            const lineOpacity = (1 - pdist / 50) * Math.min(particle.opacity, otherParticle.opacity) * 0.2; // More visible lines
+                            if (pdistSq < connectionDistanceSq) { // Longer connections
+                                const pdist = Math.sqrt(pdistSq);
+                                ctx.beginPath();
+                                ctx.moveTo(particle.x, particle.y);
+                                ctx.lineTo(otherParticle.x, otherParticle.y);
+                                const lineOpacity = (1 - pdist / connectionDistance) * Math.min(particle.opacity, otherParticle.opacity) * 0.2; // More visible lines
 
-                            if (isDark) {
-                                ctx.strokeStyle = `hsla(200, 40%, 70%, ${lineOpacity})`;
-                            } else {
-                                ctx.strokeStyle = `hsla(210, 30%, 40%, ${lineOpacity * 0.6})`; // Darker, more visible lines
+                                if (isDark) {
+                                    ctx.strokeStyle = `hsla(200, 40%, 70%, ${lineOpacity})`;
+                                } else {
+                                    ctx.strokeStyle = `hsla(210, 30%, 40%, ${lineOpacity * 0.6})`; // Darker, more visible lines
+                                }
+
+                                ctx.lineWidth = 0.5;
+                                ctx.stroke();
                             }
-
-                            ctx.lineWidth = 0.5;
-                            ctx.stroke();
                         }
-                    });
+                    }
                 }
-            });
+            }
 
             animationFrameRef.current = requestAnimationFrame(animate);
         };
