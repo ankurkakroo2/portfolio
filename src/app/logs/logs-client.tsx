@@ -1,5 +1,6 @@
 "use client";
 
+import { useSectionAnimation } from "@/components/animation-provider";
 import { LogEntry } from "@/components/sections/log-entry";
 import { motion } from "framer-motion";
 
@@ -15,13 +16,14 @@ interface LogsClientProps {
 }
 
 export function LogsClient({ logs }: LogsClientProps) {
+  const headerAnimation = useSectionAnimation("logs-header", 0);
+  const emptyStateAnimation = useSectionAnimation("logs-empty", 0.2);
+
   return (
-    <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10 flex-grow">
+    <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10 flex-grow logs-content [&_a]:text-blue-600/60 [&_a]:dark:text-blue-400/50 [&_a]:no-underline [&_a]:hover:text-blue-600/80 [&_a]:dark:hover:text-blue-400/70">
       <div className="py-20 md:py-28 particle-exclusion">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          {...headerAnimation}
           className="mb-16"
         >
           <h1 className="text-4xl md:text-5xl font-serif font-light tracking-tight mb-4">
@@ -34,9 +36,7 @@ export function LogsClient({ logs }: LogsClientProps) {
 
         {logs.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            {...emptyStateAnimation}
             className="py-20 text-center"
           >
             <p className="text-lg text-neutral-400 dark:text-neutral-500 mb-4">
