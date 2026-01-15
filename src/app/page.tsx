@@ -14,11 +14,11 @@ export default function Home() {
       <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
         <Hero delay={0} shouldAnimate={shouldAnimate} />
         <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
-        <Experience delay={0.5} shouldAnimate={shouldAnimate} />
+        <Experience delay={1.5} shouldAnimate={shouldAnimate} />
         <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
-        <Skills delay={1.0} shouldAnimate={shouldAnimate} />
+        <Skills delay={2.0} shouldAnimate={shouldAnimate} />
         <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
-        <Education delay={1.5} shouldAnimate={shouldAnimate} />
+        <Education delay={2.5} shouldAnimate={shouldAnimate} />
 
         <footer className="py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
           <p>© {new Date().getFullYear()} Ankur Kakroo. All rights reserved.</p>
