@@ -14,37 +14,24 @@
   --background: #ffffff;
   --foreground: #171717;
   --font-serif: var(--font-outfit);
+  color-scheme: light;
 }
 
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
+  color-scheme: dark;
+}
+
+html {
+  transition: color-scheme 0.5s;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist), sans-serif;
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Smooth transitions for all elements during theme change */
-*,
-*::before,
-*::after {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-duration: 0.4s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Preserve existing transitions for elements that have specific animation needs */
-[class*="transition-"],
-[class*="duration-"],
-.motion-reduce\:transition-none {
-  transition-property: revert;
-  transition-duration: revert;
-  transition-timing-function: revert;
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
 h1,
@@ -54,34 +41,4 @@ h4,
 h5,
 h6 {
   font-family: var(--font-outfit), sans-serif !important;
-}
-
-/* View Transitions API for buttery smooth theme changes */
-@supports (view-transition-name: none) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 0.4s;
-    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Smooth cross-fade for theme transitions */
-  ::view-transition-old(root) {
-    animation-name: fade-out;
-  }
-
-  ::view-transition-new(root) {
-    animation-name: fade-in;
-  }
-}
-
-@keyframes fade-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
 }
