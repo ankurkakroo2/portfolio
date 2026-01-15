@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navigation } from "@/components/navigation";
 import { ParticleBackground } from "@/components/particle-background";
@@ -80,6 +81,7 @@ export default function RootLayout({
           {/* Uncomment after adding OPENAI_API_KEY to .env.local */}
           {/* <ChatWidget /> */}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
