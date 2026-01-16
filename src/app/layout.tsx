@@ -1,20 +1,27 @@
-import { Analytics } from "@vercel/analytics/next";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Navigation } from "@/components/navigation";
 import { ParticleBackground } from "@/components/particle-background";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@vercel/analytics/next";
 // import { ChatWidget } from "@/components/chat-widget"; // Uncomment after adding OPENAI_API_KEY to .env.local
 import type { Metadata } from "next";
-import { Geist, Outfit } from "next/font/google";
+import { Bellefair, Geist_Mono, Lora } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const bellefair = Bellefair({
+  variable: "--font-bellefair",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const lora = Lora({
+  variable: "--font-lora",
   subsets: ["latin"],
   display: "swap",
 });
 
-const geist = Geist({
-  variable: "--font-geist",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -67,7 +74,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${outfit.variable} ${geist.variable} antialiased bg-white dark:bg-black text-black dark:text-white transition-colors duration-300`}
+        className={`${bellefair.variable} ${lora.variable} ${geistMono.variable} antialiased bg-white dark:bg-black transition-colors duration-300`}
       >
         <ThemeProvider
           attribute="class"
