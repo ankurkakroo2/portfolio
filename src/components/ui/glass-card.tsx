@@ -21,6 +21,7 @@ export function GlassCard({ children, className, delay = 0, ...props }: GlassCar
                 "relative overflow-hidden rounded-xl border border-white/20 bg-white/5 p-6 backdrop-blur-md",
                 "dark:border-white/10 dark:bg-black/20",
                 "shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]",
+                "transition-all duration-500 ease-in-out",
                 className
             )}
             {...props}
