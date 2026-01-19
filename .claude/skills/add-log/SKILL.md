@@ -47,6 +47,21 @@ Mix short punchy sentences with longer ones. This creates rhythm and feels natur
 - No polish that sounds like LinkedIn
 - No "learnings" or "takeaways" labels—just say what you learned
 
+### Avoiding Redundancy
+**Before writing a new log, scan previous logs for overused phrases and patterns.**
+
+Common phrases to watch for (vary or avoid if used recently):
+- "Proper deep" / "Proper good"
+- "Good problems to have"
+- "Building on sand sucks"
+- "Pure vibes"
+- "Wild times"
+- Starting sentences with "Like," too frequently
+- Excessive use of "Garbage" / "Elegant"
+- "The real takeaway" / "Here's the thing"
+
+**Strategy**: If you spot a phrase used in the last 2-3 logs, find fresh language that conveys the same energy. Keep the voice consistent but the vocabulary rotating.
+
 ### Structure (Loose, Not Rigid)
 Just start writing. No heading. Straight into the prose.
 

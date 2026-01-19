@@ -31,7 +31,14 @@ export function ParticleBackground() {
     const pauseClearedRef = useRef(false);
     const delayedPathsRef = useRef(new Set<string>());
     const { theme } = useTheme();
+    const themeRef = useRef(theme);
+    const themeMixRef = useRef(theme === "dark" ? 1 : 0); // 0 = light, 1 = dark
     const pathname = usePathname();
+
+    // Update theme ref when theme changes, without triggering the main effect
+    useEffect(() => {
+        themeRef.current = theme;
+    }, [theme]);
 
     useEffect(() => {
         if (delayedPathsRef.current.has(pathname)) {
@@ -86,6 +93,10 @@ export function ParticleBackground() {
 
         // Initialize particles in a denser grid
         const initParticles = () => {
+            // Only initialize if empty to avoid resetting on resize if desired,
+            // but here we keep original behavior or maybe check particlesRef.current.length
+            // The original code re-initialized on resize. Let's keep that but maybe we don't need to empty it if we want to preserve positions?
+            // For now, let's keep it simple and just re-init on resize as before, but NOT on theme change.
             particlesRef.current = [];
             const spacing = 20; // Increased density
             const cols = Math.ceil(canvas.width / spacing);
@@ -137,6 +148,11 @@ export function ParticleBackground() {
             }, 150);
         };
 
+        // Linear interpolation helper
+        const lerp = (start: number, end: number, factor: number) => {
+            return start + (end - start) * factor;
+        };
+
         // Animation loop
         const animate = () => {
             if (performance.now() < animationPauseUntilRef.current) {
@@ -162,8 +178,20 @@ export function ParticleBackground() {
                 fadeInProgressRef.current = Math.min(1, fadeInProgressRef.current + 0.05); // Gradual fade-in
             }
 
+            // Smooth theme transition
+            const targetThemeVal = themeRef.current === "dark" ? 1 : 0;
+            // interpolate themeMixRef.current towards targetThemeVal
+            // Slower transition for theme: 0.02 per frame approx matches longer duration
+            const themeDiff = targetThemeVal - themeMixRef.current;
+            if (Math.abs(themeDiff) > 0.001) {
+                themeMixRef.current += themeDiff * 0.05;
+            } else {
+                themeMixRef.current = targetThemeVal;
+            }
+
+            const themeMix = themeMixRef.current; // 0 = light, 1 = dark
+
             const mouse = mouseRef.current;
-            const isDark = theme === "dark";
             const rects = exclusionRectsRef.current;
             const particles = particlesRef.current;
             const particleCount = particles.length;
@@ -257,24 +285,37 @@ export function ParticleBackground() {
                     ctx.beginPath();
                     ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
 
-                    if (isDark) {
-                        // Dark mode: Blue-white glow (optimized shadows)
-                        const alpha = particle.opacity * fadeInProgress * (0.3 + shimmerOpacity * 0.2);
-                        ctx.fillStyle = `hsla(200, 100%, 80%, ${alpha})`;
-                        ctx.shadowBlur = 8 * particle.opacity * fadeInProgress;
+                    // Interpolate Colors
+                    // Light: hsla(210, 20%, 30%, alpha) -> H:210, S:20, L:30
+                    // Dark:  hsla(200, 100%, 80%, alpha) -> H:200, S:100, L:80
+
+                    const h = lerp(210, 200, themeMix);
+                    const s = lerp(20, 100, themeMix);
+                    const l = lerp(30, 80, themeMix);
+
+                    // Light alpha base: 0.4, Dark alpha base: 0.3
+                    const alphaBase = lerp(0.4, 0.3, themeMix);
+
+                    const alpha = particle.opacity * fadeInProgress * (alphaBase + shimmerOpacity * 0.2);
+
+                    ctx.fillStyle = `hsla(${h}, ${s}%, ${l}%, ${alpha})`;
+
+                    // Shadow only for dark mode mostly
+                    // Light shadow blur: 0
+                    // Dark shadow blur: 8 * ...
+                    const shadowBlur = lerp(0, 8, themeMix) * particle.opacity * fadeInProgress;
+                    if (shadowBlur > 0.5) {
+                        ctx.shadowBlur = shadowBlur;
+                        // Shadow color: Light: none/irrelevant, Dark: 200, 100, 60
                         ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity * fadeInProgress * 0.5})`;
                     } else {
-                        // Light mode: Subtle gray-blue
-                        const alpha = particle.opacity * fadeInProgress * (0.4 + shimmerOpacity * 0.2);
-                        ctx.fillStyle = `hsla(210, 20%, 30%, ${alpha})`;
                         ctx.shadowBlur = 0;
                     }
+
                     ctx.fill();
 
-                    // Reset shadow for next particle (performance optimization)
-                    if (isDark) {
-                        ctx.shadowBlur = 0;
-                    }
+                    // Reset shadow
+                    ctx.shadowBlur = 0;
 
                     // Draw connections
                     if (particle.opacity > 0.2) {
@@ -292,14 +333,20 @@ export function ParticleBackground() {
                                 ctx.beginPath();
                                 ctx.moveTo(particle.x, particle.y);
                                 ctx.lineTo(otherParticle.x, otherParticle.y);
-                                const lineOpacity = (1 - pdist / connectionDistance) * Math.min(particle.opacity, otherParticle.opacity) * 0.2; // More visible lines
 
-                                if (isDark) {
-                                    ctx.strokeStyle = `hsla(200, 40%, 70%, ${lineOpacity})`;
-                                } else {
-                                    ctx.strokeStyle = `hsla(210, 30%, 40%, ${lineOpacity * 0.6})`; // Darker, more visible lines
-                                }
+                                const lineOpacity = (1 - pdist / connectionDistance) * Math.min(particle.opacity, otherParticle.opacity) * 0.2;
 
+                                // Line Color Interpolation
+                                // Light: hsla(210, 30%, 40%, ...)
+                                // Dark:  hsla(200, 40%, 70%, ...)
+                                const lh = lerp(210, 200, themeMix);
+                                const ls = lerp(30, 40, themeMix);
+                                const ll = lerp(40, 70, themeMix);
+
+                                // Alpha multiplier: Light: 0.6, Dark: 1.0 (implicit in previous code which didn't have multiplier for dark)
+                                const laMult = lerp(0.6, 1.0, themeMix);
+
+                                ctx.strokeStyle = `hsla(${lh}, ${ls}%, ${ll}%, ${lineOpacity * laMult})`;
                                 ctx.lineWidth = 0.5;
                                 ctx.stroke();
                             }
@@ -329,7 +376,7 @@ export function ParticleBackground() {
                 clearTimeout(scrollTimeoutRef.current);
             }
         };
-    }, [theme]);
+    }, []); // Empty dependency array!
 
     return (
         <canvas
