@@ -56,16 +56,15 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                             {RESUME_DATA.name}
                         </span>
                     </motion.h1>
-                    <motion.div
+                    <motion.h2
                         variants={{
                             hidden: { opacity: 0, y: 20 },
                             visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                         }}
+                        className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 font-serif font-medium tracking-[0.2em] uppercase text-center mt-4"
                     >
-                        <h2 className="text-base md:text-lg text-neutral-700 dark:text-neutral-300 font-serif font-medium tracking-[0.2em] uppercase text-center mt-4 transition-theme">
-                            {RESUME_DATA.title}
-                        </h2>
-                    </motion.div>
+                        {RESUME_DATA.title}
+                    </motion.h2>
                 </div>
 
                 <motion.div
@@ -73,38 +72,37 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                         hidden: { opacity: 0, y: 20 },
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                     }}
+                    className="flex flex-wrap gap-6 text-sm text-neutral-500 dark:text-neutral-400 justify-center"
                 >
-                    <div className="flex flex-wrap gap-6 text-sm text-neutral-600 dark:text-neutral-300 justify-center transition-theme">
-                        <a
-                            href={`mailto:${RESUME_DATA.contact.email}`}
-                            className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
-                        >
-                            <Mail className="h-4 w-4" />
-                            {RESUME_DATA.contact.email}
-                        </a>
-                        <a
-                            href={RESUME_DATA.contact.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
-                        >
-                            <Github className="h-4 w-4" />
-                            GitHub
-                        </a>
-                        <a
-                            href={RESUME_DATA.contact.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
-                        >
-                            <Linkedin className="h-4 w-4" />
-                            LinkedIn
-                        </a>
-                        <span className="flex items-center gap-2">
-                            <MapPin className="h-4 w-4" />
-                            {RESUME_DATA.contact.location}
-                        </span>
-                    </div>
+                    <a
+                        href={`mailto:${RESUME_DATA.contact.email}`}
+                        className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                        <Mail className="h-4 w-4" />
+                        {RESUME_DATA.contact.email}
+                    </a>
+                    <a
+                        href={RESUME_DATA.contact.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                        <Github className="h-4 w-4" />
+                        GitHub
+                    </a>
+                    <a
+                        href={RESUME_DATA.contact.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                        <Linkedin className="h-4 w-4" />
+                        LinkedIn
+                    </a>
+                    <span className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        {RESUME_DATA.contact.location}
+                    </span>
                 </motion.div>
 
                 <div className="pt-4 text-lg leading-relaxed text-neutral-700 dark:text-neutral-300 space-y-4 particle-exclusion">
