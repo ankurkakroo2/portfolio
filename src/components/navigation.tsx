@@ -9,7 +9,7 @@ export function Navigation() {
 
   return (
     <div className="w-full flex justify-end pt-6 pr-6 relative z-50">
-      <nav className="flex items-center gap-4 px-4 py-2 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-md border border-neutral-200/50 dark:border-neutral-800/50 shadow-lg transition-theme">
+      <nav className="flex items-center gap-4 px-4 py-2 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-md border border-neutral-200/50 dark:border-neutral-800/50 shadow-lg transition-colors duration-300">
         <Link
           href="/"
           prefetch={true}

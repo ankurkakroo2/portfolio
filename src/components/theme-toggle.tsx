@@ -31,7 +31,7 @@ export function ThemeToggle() {
                     scale: isDark ? 0 : 1,
                     rotate: isDark ? 90 : 0,
                 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+                transition={{ duration: 0.2 }}
                 className="absolute inset-0 flex items-center justify-center"
             >
                 <Sun className="h-5 w-5" />
@@ -42,7 +42,7 @@ export function ThemeToggle() {
                     scale: isDark ? 1 : 0,
                     rotate: isDark ? 0 : -90,
                 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+                transition={{ duration: 0.2 }}
                 className="flex items-center justify-center"
             >
                 <Moon className="h-5 w-5" />
