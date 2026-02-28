@@ -21,14 +21,14 @@ export function Navigation() {
           Home
         </Link>
         <Link
-          href="/logs"
+          href="/about"
           prefetch={true}
-          className={`text-sm font-medium transition-colors duration-200 hover:text-black dark:hover:text-white ${pathname === "/logs"
+          className={`text-sm font-medium transition-colors duration-200 hover:text-black dark:hover:text-white ${pathname === "/about"
             ? "text-black dark:text-white"
             : "text-neutral-500 dark:text-neutral-400"
             }`}
         >
-          Log
+          About Me
         </Link>
         <div className="h-4 w-px bg-neutral-300 dark:bg-neutral-700" />
         <ThemeToggle />
