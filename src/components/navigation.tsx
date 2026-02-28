@@ -28,7 +28,7 @@ export function Navigation() {
             : "text-neutral-500 dark:text-neutral-400"
             }`}
         >
-          About Me
+          About
         </Link>
         <div className="h-4 w-px bg-neutral-300 dark:bg-neutral-700" />
         <ThemeToggle />

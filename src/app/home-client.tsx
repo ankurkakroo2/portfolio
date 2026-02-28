@@ -1,5 +1,6 @@
 "use client";
 
+import { GitHubContributions } from "@/components/sections/github-contributions";
 import { Hero } from "@/components/sections/hero";
 import { LogEntry } from "@/components/sections/log-entry";
 import { usePageAnimation } from "@/lib/page-animation";
@@ -24,6 +25,7 @@ export function HomeClient({ logs }: HomeClientProps) {
     <main className="min-h-screen transition-colors duration-300 relative">
       <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
         <Hero delay={0} shouldAnimate={shouldAnimate} />
+        <GitHubContributions delay={0.4} shouldAnimate={shouldAnimate} />
         <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
 
         <div className="py-16 particle-exclusion [&_a]:text-blue-600/60 [&_a]:dark:text-blue-400/50 [&_a]:no-underline [&_a]:hover:text-blue-600/80 [&_a]:dark:hover:text-blue-400/70">

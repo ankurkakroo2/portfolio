@@ -11,7 +11,7 @@ interface HeroProps {
 
 export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
     return (
-        <section className="py-20 md:py-28">
+        <section className="pt-20 md:pt-28 pb-8">
             <motion.div
                 initial={shouldAnimate ? "hidden" : false}
                 animate="visible"
@@ -72,7 +72,7 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                         hidden: { opacity: 0, y: 20 },
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                     }}
-                    className="flex flex-wrap gap-6 text-sm text-neutral-500 dark:text-neutral-400 justify-center"
+                    className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-neutral-500 dark:text-neutral-400 justify-center"
                 >
                     <a
                         href={`mailto:${RESUME_DATA.contact.email}`}
