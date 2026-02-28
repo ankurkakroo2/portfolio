@@ -11,7 +11,7 @@ interface HeroProps {
 
 export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
     return (
-        <section className="py-20 md:py-28">
+        <section className="pt-20 md:pt-28 pb-8">
             <motion.div
                 initial={shouldAnimate ? "hidden" : false}
                 animate="visible"

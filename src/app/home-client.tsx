@@ -25,7 +25,6 @@ export function HomeClient({ logs }: HomeClientProps) {
     <main className="min-h-screen transition-colors duration-300 relative">
       <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
         <Hero delay={0} shouldAnimate={shouldAnimate} />
-        <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
         <GitHubContributions delay={0.4} shouldAnimate={shouldAnimate} />
         <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
 

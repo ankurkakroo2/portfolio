@@ -34,11 +34,11 @@ const CELL_GAP = 3;
 const CELL_STEP = CELL_SIZE + CELL_GAP;
 const DAY_LABEL_WIDTH = 30;
 const TOTAL_WEEKS = 53;
-const MONTH_LABEL_MIN_GAP = CELL_STEP * 3; // skip label if closer than 3 weeks
+const MONTH_LABEL_MIN_GAP = CELL_STEP * 3;
 
 const LEVEL_COLORS = {
   light: ["#ebedf0", "#c6cdd5", "#93a1b0", "#607080", "#2d3a4a"],
-  dark: ["#1a2233", "#2a3a50", "#3d5570", "#5e80a0", "#a0c8e8"],
+  dark: ["#232d3b", "#2a3a50", "#3d5570", "#5e80a0", "#a0c8e8"],
 };
 
 const SKELETON_COLORS = {
@@ -109,7 +109,6 @@ function getMonthLabels(
       const month = new Date(firstDay.date + "T00:00:00").getMonth();
       if (month !== lastMonth) {
         const x = col * CELL_STEP;
-        // Skip if too close to previous label to prevent overlap
         if (x - lastX >= MONTH_LABEL_MIN_GAP) {
           labels.push({ label: MONTHS[month], x });
           lastX = x;
@@ -182,6 +181,8 @@ export function GitHubContributions({
   const [data, setData] = useState<ContributionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
+  const [showLeftFade, setShowLeftFade] = useState(false);
+  const [showRightFade, setShowRightFade] = useState(false);
   const mounted = useSyncExternalStore(
     (cb) => {
       cb();
@@ -204,12 +205,31 @@ export function GitHubContributions({
       .catch(() => setLoading(false));
   }, []);
 
+  // Update edge fade visibility based on scroll position
+  const updateFades = useCallback(() => {
+    const el = graphRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setShowLeftFade(scrollLeft > 4);
+    setShowRightFade(maxScroll - scrollLeft > 4);
+  }, []);
+
   // Scroll to the far right so the most recent contributions are the default view
   useEffect(() => {
     if (!loading && graphRef.current) {
       graphRef.current.scrollLeft = graphRef.current.scrollWidth;
+      updateFades();
     }
-  }, [loading]);
+  }, [loading, updateFades]);
+
+  // Listen for scroll to update fades
+  useEffect(() => {
+    const el = graphRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateFades, { passive: true });
+    return () => el.removeEventListener("scroll", updateFades);
+  }, [updateFades]);
 
   const isDark = resolvedTheme === "dark";
   const colors = isDark ? LEVEL_COLORS.dark : LEVEL_COLORS.light;
@@ -221,11 +241,6 @@ export function GitHubContributions({
 
   const monthLabels = useMemo(() => getMonthLabels(weeks), [weeks]);
 
-  const totalContributions = useMemo(() => {
-    if (!data?.contributions) return 0;
-    return data.contributions.reduce((sum, c) => sum + c.count, 0);
-  }, [data]);
-
   const gridWidth = DAY_LABEL_WIDTH + weeks.length * CELL_STEP;
 
   const handleCellEnter = useCallback(
@@ -234,7 +249,6 @@ export function GitHubContributions({
       const rect = graphRef.current.getBoundingClientRect();
       const cellRect = (e.target as HTMLElement).getBoundingClientRect();
       setTooltip({
-        // Account for scroll position so tooltip aligns to the cell in scrollable content
         x:
           cellRect.left -
           rect.left +
@@ -254,169 +268,168 @@ export function GitHubContributions({
 
   if (!mounted) {
     return (
-      <section className="py-12 particle-exclusion">
-        <div style={{ height: 220 }} />
-      </section>
+      <div className="particle-exclusion">
+        <div style={{ height: 120 }} />
+      </div>
     );
   }
 
+  const fadeBg = isDark
+    ? "from-[#0a0a0a]"
+    : "from-white";
+
   return (
-    <section className="py-12 particle-exclusion">
+    <div className="particle-exclusion">
       <motion.div
         initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay, ease: "easeOut" }}
       >
-        <div className="mb-6">
-          <h2 className="text-4xl md:text-5xl font-serif font-light tracking-tight mb-2">
-            Contributions
-          </h2>
-          {!loading && data && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-              className="text-sm text-neutral-500 dark:text-neutral-400"
-            >
-              {totalContributions.toLocaleString()} contributions in the last
-              year
-            </motion.p>
+        <div className="relative">
+          {/* Left fade */}
+          {showLeftFade && (
+            <div
+              className={`absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r ${fadeBg} to-transparent z-10 pointer-events-none`}
+            />
           )}
-          {loading && (
-            <div className="h-5 w-64 rounded bg-neutral-100 dark:bg-neutral-900 animate-pulse" />
+          {/* Right fade */}
+          {showRightFade && (
+            <div
+              className={`absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l ${fadeBg} to-transparent z-10 pointer-events-none`}
+            />
           )}
-        </div>
 
-        <div
-          ref={graphRef}
-          className="relative overflow-x-auto overflow-y-hidden pb-4"
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-        >
-          {loading ? (
-            <SkeletonGraph isDark={isDark} />
-          ) : data && weeks.length > 0 ? (
-            <div style={{ width: gridWidth, minWidth: gridWidth }}>
-              {/* Month labels */}
-              <div
-                className="relative text-xs text-neutral-400 dark:text-neutral-500"
-                style={{
-                  height: 18,
-                  marginLeft: DAY_LABEL_WIDTH,
-                  fontFamily: "var(--font-geist), sans-serif",
-                }}
-              >
-                {monthLabels.map((m, i) => (
-                  <span
-                    key={i}
-                    className="absolute"
-                    style={{ left: m.x, top: 0 }}
-                  >
-                    {m.label}
-                  </span>
-                ))}
-              </div>
-
-              {/* Graph grid */}
-              <div className="flex">
-                {/* Day labels */}
+          <div
+            ref={graphRef}
+            className="relative overflow-x-auto overflow-y-hidden pb-4"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            {loading ? (
+              <SkeletonGraph isDark={isDark} />
+            ) : data && weeks.length > 0 ? (
+              <div style={{ width: gridWidth, minWidth: gridWidth }}>
+                {/* Month labels */}
                 <div
-                  className="flex flex-col text-xs text-neutral-400 dark:text-neutral-500"
+                  className="relative text-xs text-neutral-400 dark:text-neutral-500"
                   style={{
-                    width: DAY_LABEL_WIDTH,
-                    flexShrink: 0,
+                    height: 18,
+                    marginLeft: DAY_LABEL_WIDTH,
                     fontFamily: "var(--font-geist), sans-serif",
                   }}
                 >
-                  {DAY_LABELS.map((label, i) => (
-                    <div
+                  {monthLabels.map((m, i) => (
+                    <span
                       key={i}
-                      style={{
-                        height: CELL_SIZE,
-                        marginBottom: i < 6 ? CELL_GAP : 0,
-                        lineHeight: `${CELL_SIZE}px`,
-                        fontSize: 11,
-                      }}
+                      className="absolute"
+                      style={{ left: m.x, top: 0 }}
                     >
-                      {label}
-                    </div>
+                      {m.label}
+                    </span>
                   ))}
                 </div>
 
-                {/* Cells */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateRows: `repeat(7, ${CELL_SIZE}px)`,
-                    gridAutoFlow: "column",
-                    gap: CELL_GAP,
-                  }}
-                >
-                  {weeks.flatMap((week, weekIdx) =>
-                    week.map((day, dayIdx) => (
+                {/* Graph grid */}
+                <div className="flex">
+                  {/* Day labels */}
+                  <div
+                    className="flex flex-col text-xs text-neutral-400 dark:text-neutral-500"
+                    style={{
+                      width: DAY_LABEL_WIDTH,
+                      flexShrink: 0,
+                      fontFamily: "var(--font-geist), sans-serif",
+                    }}
+                  >
+                    {DAY_LABELS.map((label, i) => (
                       <div
-                        key={`${weekIdx}-${dayIdx}`}
+                        key={i}
                         style={{
-                          width: CELL_SIZE,
                           height: CELL_SIZE,
-                          borderRadius: 2,
-                          backgroundColor: day
-                            ? colors[day.level]
-                            : "transparent",
-                          transition: "background-color 0.15s ease",
-                          cursor: day ? "pointer" : "default",
+                          marginBottom: i < 6 ? CELL_GAP : 0,
+                          lineHeight: `${CELL_SIZE}px`,
+                          fontSize: 11,
                         }}
-                        onMouseEnter={
-                          day
-                            ? (e) => handleCellEnter(e, day)
-                            : undefined
-                        }
-                        onMouseLeave={day ? handleCellLeave : undefined}
-                      />
-                    ))
-                  )}
+                      >
+                        {label}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Cells */}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateRows: `repeat(7, ${CELL_SIZE}px)`,
+                      gridAutoFlow: "column",
+                      gap: CELL_GAP,
+                    }}
+                  >
+                    {weeks.flatMap((week, weekIdx) =>
+                      week.map((day, dayIdx) => (
+                        <div
+                          key={`${weekIdx}-${dayIdx}`}
+                          style={{
+                            width: CELL_SIZE,
+                            height: CELL_SIZE,
+                            borderRadius: 2,
+                            backgroundColor: day
+                              ? colors[day.level]
+                              : "transparent",
+                            transition: "background-color 0.15s ease",
+                            cursor: day ? "pointer" : "default",
+                          }}
+                          onMouseEnter={
+                            day
+                              ? (e) => handleCellEnter(e, day)
+                              : undefined
+                          }
+                          onMouseLeave={day ? handleCellLeave : undefined}
+                        />
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="py-8 text-center text-sm text-neutral-400 dark:text-neutral-500">
-              Unable to load contribution data
-            </div>
-          )}
-
-          {/* Tooltip */}
-          {tooltip && (
-            <div
-              className="absolute pointer-events-none z-20"
-              style={{
-                left: tooltip.x,
-                top: tooltip.y,
-                transform: "translate(-50%, -100%)",
-              }}
-            >
-              <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-md shadow-lg px-3 py-2 text-xs whitespace-nowrap">
-                <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                  {tooltip.count} contribution
-                  {tooltip.count !== 1 ? "s" : ""}{" "}
-                </p>
-                <p className="text-neutral-500 dark:text-neutral-400 mt-0.5">
-                  {formatDate(tooltip.date)}
-                </p>
+            ) : (
+              <div className="py-8 text-center text-sm text-neutral-400 dark:text-neutral-500">
+                Unable to load contribution data
               </div>
+            )}
+
+            {/* Tooltip */}
+            {tooltip && (
               <div
-                className="mx-auto w-2 h-2 bg-white dark:bg-neutral-900 border-b border-r border-neutral-200 dark:border-neutral-800"
+                className="absolute pointer-events-none z-20"
                 style={{
-                  transform: "rotate(45deg) translateX(-50%)",
-                  marginTop: -5,
-                  marginLeft: "calc(50% - 4px)",
+                  left: tooltip.x,
+                  top: tooltip.y,
+                  transform: "translate(-50%, -100%)",
                 }}
-              />
-            </div>
-          )}
+              >
+                <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-md shadow-lg px-3 py-2 text-xs whitespace-nowrap">
+                  <p className="font-medium text-neutral-900 dark:text-neutral-100">
+                    {tooltip.count} contribution
+                    {tooltip.count !== 1 ? "s" : ""}{" "}
+                  </p>
+                  <p className="text-neutral-500 dark:text-neutral-400 mt-0.5">
+                    {formatDate(tooltip.date)}
+                  </p>
+                </div>
+                <div
+                  className="mx-auto w-2 h-2 bg-white dark:bg-neutral-900 border-b border-r border-neutral-200 dark:border-neutral-800"
+                  style={{
+                    transform: "rotate(45deg) translateX(-50%)",
+                    marginTop: -5,
+                    marginLeft: "calc(50% - 4px)",
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </motion.div>
-    </section>
+    </div>
   );
 }
