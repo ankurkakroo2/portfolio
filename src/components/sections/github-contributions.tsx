@@ -34,6 +34,7 @@ const CELL_GAP = 3;
 const CELL_STEP = CELL_SIZE + CELL_GAP;
 const DAY_LABEL_WIDTH = 30;
 const TOTAL_WEEKS = 53;
+const MONTH_LABEL_MIN_GAP = CELL_STEP * 3; // skip label if closer than 3 weeks
 
 const LEVEL_COLORS = {
   light: ["#ebedf0", "#c6cdd5", "#93a1b0", "#607080", "#2d3a4a"],
@@ -100,16 +101,19 @@ function getMonthLabels(
 ): { label: string; x: number }[] {
   const labels: { label: string; x: number }[] = [];
   let lastMonth = -1;
+  let lastX = -Infinity;
 
   for (let col = 0; col < weeks.length; col++) {
     const firstDay = weeks[col].find((d) => d !== null);
     if (firstDay) {
       const month = new Date(firstDay.date + "T00:00:00").getMonth();
       if (month !== lastMonth) {
-        labels.push({
-          label: MONTHS[month],
-          x: col * CELL_STEP,
-        });
+        const x = col * CELL_STEP;
+        // Skip if too close to previous label to prevent overlap
+        if (x - lastX >= MONTH_LABEL_MIN_GAP) {
+          labels.push({ label: MONTHS[month], x });
+          lastX = x;
+        }
         lastMonth = month;
       }
     }
@@ -128,40 +132,37 @@ function formatDate(dateStr: string): string {
   });
 }
 
-function SkeletonGraph({
-  isDark,
-  weekCount,
-}: {
-  isDark: boolean;
-  weekCount: number;
-}) {
+function SkeletonGraph({ isDark }: { isDark: boolean }) {
   const skeletonColor = isDark ? SKELETON_COLORS.dark : SKELETON_COLORS.light;
   const days = 7;
+  const gridWidth = DAY_LABEL_WIDTH + TOTAL_WEEKS * CELL_STEP;
 
   return (
     <div className="animate-pulse">
-      <div style={{ height: 18 }} />
-      <div className="flex">
-        <div style={{ width: DAY_LABEL_WIDTH, flexShrink: 0 }} />
-        <div
-          style={{
-            display: "grid",
-            gridTemplateRows: `repeat(${days}, ${CELL_SIZE}px)`,
-            gridAutoFlow: "column",
-            gap: CELL_GAP,
-          }}
-        >
-          {Array.from({ length: weekCount * days }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                width: CELL_SIZE,
-                height: CELL_SIZE,
-                borderRadius: 2,
-                backgroundColor: skeletonColor,
-              }}
-            />
-          ))}
+      <div style={{ width: gridWidth, minWidth: gridWidth }}>
+        <div style={{ height: 18 }} />
+        <div className="flex">
+          <div style={{ width: DAY_LABEL_WIDTH, flexShrink: 0 }} />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateRows: `repeat(${days}, ${CELL_SIZE}px)`,
+              gridAutoFlow: "column",
+              gap: CELL_GAP,
+            }}
+          >
+            {Array.from({ length: TOTAL_WEEKS * days }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  width: CELL_SIZE,
+                  height: CELL_SIZE,
+                  borderRadius: 2,
+                  backgroundColor: skeletonColor,
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -181,7 +182,6 @@ export function GitHubContributions({
   const [data, setData] = useState<ContributionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
-  const [maxWeeks, setMaxWeeks] = useState(TOTAL_WEEKS);
   const mounted = useSyncExternalStore(
     (cb) => {
       cb();
@@ -191,21 +191,6 @@ export function GitHubContributions({
     () => false
   );
   const graphRef = useRef<HTMLDivElement>(null);
-
-  // Measure container width and calculate how many weeks fit
-  useEffect(() => {
-    const el = graphRef.current;
-    if (!el) return;
-
-    const observer = new ResizeObserver((entries) => {
-      const width = entries[0].contentRect.width;
-      const fits = Math.floor((width - DAY_LABEL_WIDTH) / CELL_STEP);
-      setMaxWeeks(Math.max(Math.min(fits, TOTAL_WEEKS), 1));
-    });
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     fetch("/api/github-contributions")
@@ -219,29 +204,29 @@ export function GitHubContributions({
       .catch(() => setLoading(false));
   }, []);
 
+  // Scroll to the far right so the most recent contributions are the default view
+  useEffect(() => {
+    if (!loading && graphRef.current) {
+      graphRef.current.scrollLeft = graphRef.current.scrollWidth;
+    }
+  }, [loading]);
+
   const isDark = resolvedTheme === "dark";
   const colors = isDark ? LEVEL_COLORS.dark : LEVEL_COLORS.light;
 
-  const allWeeks = useMemo(
+  const weeks = useMemo(
     () => (data ? organizeIntoWeeks(data.contributions) : []),
     [data]
   );
 
-  // Slice from the right so the most recent contributions are always visible
-  const displayWeeks = useMemo(
-    () => allWeeks.slice(-maxWeeks),
-    [allWeeks, maxWeeks]
-  );
-
-  const monthLabels = useMemo(
-    () => getMonthLabels(displayWeeks),
-    [displayWeeks]
-  );
+  const monthLabels = useMemo(() => getMonthLabels(weeks), [weeks]);
 
   const totalContributions = useMemo(() => {
     if (!data?.contributions) return 0;
     return data.contributions.reduce((sum, c) => sum + c.count, 0);
   }, [data]);
+
+  const gridWidth = DAY_LABEL_WIDTH + weeks.length * CELL_STEP;
 
   const handleCellEnter = useCallback(
     (e: React.MouseEvent, contribution: Contribution) => {
@@ -249,7 +234,12 @@ export function GitHubContributions({
       const rect = graphRef.current.getBoundingClientRect();
       const cellRect = (e.target as HTMLElement).getBoundingClientRect();
       setTooltip({
-        x: cellRect.left - rect.left + CELL_SIZE / 2,
+        // Account for scroll position so tooltip aligns to the cell in scrollable content
+        x:
+          cellRect.left -
+          rect.left +
+          graphRef.current.scrollLeft +
+          CELL_SIZE / 2,
         y: cellRect.top - rect.top - 8,
         date: contribution.date,
         count: contribution.count,
@@ -297,11 +287,18 @@ export function GitHubContributions({
           )}
         </div>
 
-        <div ref={graphRef} className="relative overflow-hidden pb-4">
+        <div
+          ref={graphRef}
+          className="relative overflow-x-auto overflow-y-hidden pb-4"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
           {loading ? (
-            <SkeletonGraph isDark={isDark} weekCount={maxWeeks} />
-          ) : data && displayWeeks.length > 0 ? (
-            <div>
+            <SkeletonGraph isDark={isDark} />
+          ) : data && weeks.length > 0 ? (
+            <div style={{ width: gridWidth, minWidth: gridWidth }}>
               {/* Month labels */}
               <div
                 className="relative text-xs text-neutral-400 dark:text-neutral-500"
@@ -357,7 +354,7 @@ export function GitHubContributions({
                     gap: CELL_GAP,
                   }}
                 >
-                  {displayWeeks.flatMap((week, weekIdx) =>
+                  {weeks.flatMap((week, weekIdx) =>
                     week.map((day, dayIdx) => (
                       <div
                         key={`${weekIdx}-${dayIdx}`}
@@ -382,7 +379,6 @@ export function GitHubContributions({
                   )}
                 </div>
               </div>
-
             </div>
           ) : (
             <div className="py-8 text-center text-sm text-neutral-400 dark:text-neutral-500">
