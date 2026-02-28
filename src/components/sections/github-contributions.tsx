@@ -37,8 +37,8 @@ const TOTAL_WEEKS = 53;
 const MONTH_LABEL_MIN_GAP = CELL_STEP * 3;
 
 const LEVEL_COLORS = {
-  light: ["#ebedf0", "#c6cdd5", "#93a1b0", "#607080", "#2d3a4a"],
-  dark: ["#232d3b", "#2a3a50", "#3d5570", "#5e80a0", "#a0c8e8"],
+  light: ["#ebedf0", "#aec8da", "#7ba0b8", "#4a7290", "#1e3a52"],
+  dark: ["#2a303c", "#1e4d72", "#2d6d9a", "#4a92c2", "#7cc4ee"],
 };
 
 const SKELETON_COLORS = {
