@@ -31,7 +31,7 @@ export function LogsClient({ logs }: LogsClientProps) {
             Log
           </h1>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            Personal projects and experiments
+            Thinking out loud while building
           </p>
         </motion.div>
 
