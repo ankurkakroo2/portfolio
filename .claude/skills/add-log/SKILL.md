@@ -12,7 +12,7 @@ So you built stuff this week. Or debugged it. Maybe both. This skill captures it
 Ask me: `/add-log` or "add a log entry for this week"
 
 I'll ask for three things:
-1. What actually happened (dump URLs, code references, folder links—raw context welcome)
+1. What actually happened (dump URLs, code references, folder links, raw context welcome)
 2. Why you were doing it (the real reason, not corporate-speak)
 3. What stuck with you (what you learned, what surprised you, what made you go "oh *that's* how that works")
 
@@ -37,15 +37,16 @@ Mix short punchy sentences with longer ones. This creates rhythm and feels natur
 - **Conversational asides**: "(mistake? feature? still unclear)", "if you want to follow the rabbit holes"
 - **Self-questioning**: Ask rhetorical questions. "Why?" "Then what?" "In practice?"
 - **Sharp dry humor**: "Building on sand sucks." "Pure vibes." "Good problems to have."
-- **Thinking markers**: "But here's the thing—", "Like,", "Then", "So"
+- **Thinking markers**: "But here's the thing.", "Like,", "Then", "So"
 - **Real frustration/joy**: Don't sanitize. "Garbage." "Elegant." "Weird."
 
 ### What NOT to Do
+- **No em dashes (—).** Use periods, commas, colons, or parentheses instead. Em dashes read as AI slop.
 - No corporate jargon ("enhanced metrics", "synergy", "stakeholders")
 - No "I focused on..." (use "focused on" or just describe it)
 - No forced structure or bullet lists
 - No polish that sounds like LinkedIn
-- No "learnings" or "takeaways" labels—just say what you learned
+- No "learnings" or "takeaways" labels, just say what you learned
 
 ### Avoiding Redundancy
 **Before writing a new log, scan previous logs for overused phrases and patterns.**
@@ -73,7 +74,7 @@ But honestly? Let it flow. If it needs 4 paragraphs, do 4. If 2 works, do 2.
 
 ## Example (Reference)
 
-Went deep into LLMs. Proper deep. Like, sat down with Andrej Karpathy's 'Intro to LLMs' and didn't surface for hours. The whole pretraining flow: tokenization, embeddings in high-dimensional space, transformers doing attention, softmax sampling. Then post-training—where the magic happens. RLHF, hallucinations, fine-tuning. The entire spectrum.
+Went deep into LLMs. Proper deep. Like, sat down with Andrej Karpathy's 'Intro to LLMs' and didn't surface for hours. The whole pretraining flow: tokenization, embeddings in high-dimensional space, transformers doing attention, softmax sampling. Then post-training, where the magic happens. RLHF, hallucinations, fine-tuning. The entire spectrum.
 
 Why? Building on sand sucks. If you're going to touch LLMs, the mental model comes first. Not the 'throw a prompt at the API and pray' version. The actual version. Layer by layer.
 
