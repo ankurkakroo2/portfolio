@@ -63,8 +63,28 @@ Common phrases to watch for (vary or avoid if used recently):
 
 **Strategy**: If you spot a phrase used in the last 2-3 logs, find fresh language that conveys the same energy. Keep the voice consistent but the vocabulary rotating.
 
+### Heading (Required)
+Every log needs a short heading in YAML frontmatter. This is the first thing readers see.
+
+**Style**: 3-4 words. Conversational, observational. Like something you'd say to a friend summarizing what the entry is about. Not a blog title. Not clickbait. Just the vibe of the entry in a few words.
+
+**Examples from existing logs**:
+- "Two Camps, Same Tool" (about optimizers vs. explorers in AI)
+- "Rip the Tools Out" (about over-tooled agents being slow)
+- "Know When to Stop" (about killing long agent sessions)
+- "Jailbreaking a Kindle" (about the Kindle dashboard project)
+- "Building From My Phone" (about mobile dev workflow)
+
+**Format**: YAML frontmatter at the top of the file, before the prose:
+```
+---
+heading: Your Heading Here
+---
+The prose starts here...
+```
+
 ### Structure (Loose, Not Rigid)
-Just start writing. No heading. Straight into the prose.
+After the frontmatter, start writing. Straight into the prose.
 
 Paragraph 1: What happened (the work, the exploration, the building)
 Paragraph 2: Why it mattered (the real reason, the intent)
@@ -74,6 +94,9 @@ But honestly? Let it flow. If it needs 4 paragraphs, do 4. If 2 works, do 2.
 
 ## Example (Reference)
 
+---
+heading: Theory Before the API
+---
 Went deep into LLMs. Proper deep. Like, sat down with Andrej Karpathy's 'Intro to LLMs' and didn't surface for hours. The whole pretraining flow: tokenization, embeddings in high-dimensional space, transformers doing attention, softmax sampling. Then post-training, where the magic happens. RLHF, hallucinations, fine-tuning. The entire spectrum.
 
 Why? Building on sand sucks. If you're going to touch LLMs, the mental model comes first. Not the 'throw a prompt at the API and pray' version. The actual version. Layer by layer.
