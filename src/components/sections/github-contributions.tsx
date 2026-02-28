@@ -37,7 +37,7 @@ const TOTAL_WEEKS = 53;
 
 const LEVEL_COLORS = {
   light: ["#ebedf0", "#c6cdd5", "#93a1b0", "#607080", "#2d3a4a"],
-  dark: ["#161b22", "#1e2730", "#2e3a48", "#4a5e73", "#8bacc7"],
+  dark: ["#1a2233", "#2a3a50", "#3d5570", "#5e80a0", "#a0c8e8"],
 };
 
 const SKELETON_COLORS = {
@@ -383,22 +383,6 @@ export function GitHubContributions({
                 </div>
               </div>
 
-              {/* Legend */}
-              <div className="flex items-center justify-end gap-1.5 mt-3 text-xs text-neutral-400 dark:text-neutral-500">
-                <span style={{ fontSize: 11 }}>Less</span>
-                {colors.map((color, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      width: CELL_SIZE,
-                      height: CELL_SIZE,
-                      borderRadius: 2,
-                      backgroundColor: color,
-                    }}
-                  />
-                ))}
-                <span style={{ fontSize: 11 }}>More</span>
-              </div>
             </div>
           ) : (
             <div className="py-8 text-center text-sm text-neutral-400 dark:text-neutral-500">
