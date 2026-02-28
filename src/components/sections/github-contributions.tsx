@@ -209,19 +209,33 @@ export function GitHubContributions({
   const updateFades = useCallback(() => {
     const el = graphRef.current;
     if (!el) return;
-    const scrollLeft = el.scrollLeft;
+    const scrollLeft = Math.round(el.scrollLeft);
     const maxScroll = el.scrollWidth - el.clientWidth;
-    setShowLeftFade(scrollLeft > 4);
-    setShowRightFade(maxScroll - scrollLeft > 4);
+    // No overflow at all — hide both fades
+    if (maxScroll <= 0) {
+      setShowLeftFade(false);
+      setShowRightFade(false);
+      return;
+    }
+    setShowLeftFade(scrollLeft > 2);
+    setShowRightFade(maxScroll - scrollLeft > 2);
   }, []);
 
-  // Scroll to the far right so the most recent contributions are the default view
+  // Scroll to the far right so the most recent contributions are the default view.
+  // Double-rAF ensures the browser has laid out the full-width content before we
+  // read scrollWidth and set scrollLeft.
   useEffect(() => {
-    if (!loading && graphRef.current) {
-      graphRef.current.scrollLeft = graphRef.current.scrollWidth;
-      updateFades();
+    if (!loading && data && graphRef.current) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (graphRef.current) {
+            graphRef.current.scrollLeft = graphRef.current.scrollWidth;
+            updateFades();
+          }
+        });
+      });
     }
-  }, [loading, updateFades]);
+  }, [loading, data, updateFades]);
 
   // Listen for scroll to update fades
   useEffect(() => {
@@ -279,7 +293,7 @@ export function GitHubContributions({
     : "from-white";
 
   return (
-    <div className="particle-exclusion">
+    <div className="particle-exclusion pb-12">
       <motion.div
         initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
         animate={{ opacity: 1, y: 0 }}
