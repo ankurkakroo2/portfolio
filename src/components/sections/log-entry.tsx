@@ -5,12 +5,13 @@ import ReactMarkdown from "react-markdown";
 
 interface LogEntryProps {
   date: string; // "January 3, 2026"
+  heading: string; // Short heading from frontmatter
   content: string; // Raw markdown content
   delay: number; // Animation delay
   shouldAnimate?: boolean;
 }
 
-export function LogEntry({ date, content, delay, shouldAnimate = true }: LogEntryProps) {
+export function LogEntry({ date, heading, content, delay, shouldAnimate = true }: LogEntryProps) {
   return (
     <motion.div
       initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
@@ -20,8 +21,11 @@ export function LogEntry({ date, content, delay, shouldAnimate = true }: LogEntr
     >
       <div className="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-neutral-200 dark:bg-neutral-800 group-hover:bg-black dark:group-hover:bg-white transition-colors duration-300" />
 
-      <h2 className="text-2xl font-serif font-light tracking-tight mb-4">
+      <p className="text-xs uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-1">
         {date}
+      </p>
+      <h2 className="text-2xl font-serif font-light tracking-tight mb-4">
+        {heading}
       </h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
