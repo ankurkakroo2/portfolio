@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 
 interface Log {
   date: string;
+  heading: string;
   filename: string;
   content: string;
   timestamp: Date;
@@ -60,6 +61,7 @@ export function HomeClient({ logs }: HomeClientProps) {
                 <LogEntry
                   key={log.filename}
                   date={log.date}
+                  heading={log.heading}
                   content={log.content}
                   delay={1.0 + index * 0.1}
                   shouldAnimate={shouldAnimate}
