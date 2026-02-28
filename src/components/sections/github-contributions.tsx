@@ -217,8 +217,9 @@ export function GitHubContributions({
       setShowRightFade(false);
       return;
     }
-    setShowLeftFade(scrollLeft > 2);
-    setShowRightFade(maxScroll - scrollLeft > 2);
+    // Generous threshold so momentum scroll settling near the edge still hides the fade
+    setShowLeftFade(scrollLeft > 10);
+    setShowRightFade(maxScroll - scrollLeft > 10);
   }, []);
 
   // Scroll to the far right so the most recent contributions are the default view.
