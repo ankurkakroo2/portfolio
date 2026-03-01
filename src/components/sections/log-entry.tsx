@@ -2,7 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
 interface LogEntryProps {
@@ -43,15 +44,13 @@ export function LogEntry({
       )}
 
       {isTimeline && dateSlug && (
-        <a
+        <Link
           href={`/logs/${dateSlug}`}
-          target="_blank"
-          rel="noopener noreferrer"
           className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-1 text-neutral-400 hover:text-neutral-600 dark:text-neutral-600 dark:hover:text-neutral-300"
-          aria-label={`Open "${heading}" in new tab`}
+          aria-label={`Read "${heading}"`}
         >
-          <ArrowUpRight className="h-4 w-4" />
-        </a>
+          <ArrowRight className="h-4 w-4" />
+        </Link>
       )}
 
       <p className="text-xs uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-1">
