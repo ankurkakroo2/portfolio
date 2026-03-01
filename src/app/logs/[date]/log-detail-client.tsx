@@ -31,11 +31,11 @@ export function LogDetailClient({ log }: LogDetailClientProps) {
           className="mb-12"
         >
           <Link
-            href="/logs"
+            href="/"
             className="inline-flex items-center gap-1.5 text-sm !text-neutral-500 dark:!text-neutral-400 hover:!text-black dark:hover:!text-white transition-colors duration-200"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Back to Log
+            Home
           </Link>
         </motion.div>
 
