@@ -169,6 +169,17 @@ export function ParticleBackground() {
             const particleCount = particles.length;
             const maxDistance = 180; // Interaction radius
             const maxDistanceSq = maxDistance * maxDistance;
+
+            // Check if the mouse is inside any exclusion zone — if so, suppress particle activation
+            let mouseInExclusion = false;
+            for (let r = 0; r < rects.length; r++) {
+                const rect = rects[r];
+                if (mouse.x >= rect.left && mouse.x <= rect.right &&
+                    mouse.y >= rect.top && mouse.y <= rect.bottom) {
+                    mouseInExclusion = true;
+                    break;
+                }
+            }
             const exclusionDistance = 40;
             const exclusionDistanceSq = exclusionDistance * exclusionDistance;
             const connectionDistance = 50;
@@ -186,7 +197,7 @@ export function ParticleBackground() {
                 particle.shimmer += 0.02;
                 const shimmerOpacity = (Math.sin(particle.shimmer) + 1) / 2;
 
-                if (distanceSq < maxDistanceSq) {
+                if (!mouseInExclusion && distanceSq < maxDistanceSq) {
                     const distance = Math.sqrt(distanceSq);
                     // Soft boundary: Opacity fades out as distance increases
                     particle.targetOpacity = (1 - distance / maxDistance) * 0.8;
