@@ -22,9 +22,37 @@ export async function generateMetadata({
     return { title: "Log Not Found" };
   }
 
+  const title = log.heading || `Log Entry — ${log.date}`;
+  const description = log.content
+    .slice(0, 160)
+    .replace(/\n/g, " ")
+    .replace(/[#*_`\[\]]/g, "")
+    .trim();
+
   return {
-    title: `${log.heading} - Ankur Kakroo`,
-    description: log.content.slice(0, 160).replace(/\n/g, " "),
+    title: `${title} - Ankur Kakroo`,
+    description,
+    keywords: ["Ankur Kakroo", "Log", "Building in Public", log.heading].filter(
+      Boolean
+    ),
+    authors: [{ name: "Ankur Kakroo" }],
+    creator: "Ankur Kakroo",
+    metadataBase: new URL("https://ankurkakroo.in"),
+    openGraph: {
+      type: "article",
+      locale: "en_US",
+      url: `https://ankurkakroo.in/logs/${date}`,
+      title,
+      description,
+      siteName: "Ankur Kakroo",
+      publishedTime: date,
+      authors: ["Ankur Kakroo"],
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
   };
 }
 
