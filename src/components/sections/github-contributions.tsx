@@ -22,13 +22,6 @@ interface ContributionData {
   contributions: Contribution[];
 }
 
-interface TooltipData {
-  x: number;
-  y: number;
-  date: string;
-  count: number;
-}
-
 const CELL_SIZE = 11;
 const CELL_GAP = 3;
 const CELL_STEP = CELL_SIZE + CELL_GAP;
@@ -121,16 +114,6 @@ function getMonthLabels(
   return labels;
 }
 
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr + "T00:00:00");
-  return date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
 function SkeletonGraph({ isDark }: { isDark: boolean }) {
   const skeletonColor = isDark ? SKELETON_COLORS.dark : SKELETON_COLORS.light;
   const days = 7;
@@ -180,7 +163,6 @@ export function GitHubContributions({
   const { resolvedTheme } = useTheme();
   const [data, setData] = useState<ContributionData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const [showLeftFade, setShowLeftFade] = useState(false);
   const [showRightFade, setShowRightFade] = useState(false);
   const mounted = useSyncExternalStore(
@@ -257,29 +239,6 @@ export function GitHubContributions({
   const monthLabels = useMemo(() => getMonthLabels(weeks), [weeks]);
 
   const gridWidth = DAY_LABEL_WIDTH + weeks.length * CELL_STEP;
-
-  const handleCellEnter = useCallback(
-    (e: React.MouseEvent, contribution: Contribution) => {
-      if (!graphRef.current) return;
-      const rect = graphRef.current.getBoundingClientRect();
-      const cellRect = (e.target as HTMLElement).getBoundingClientRect();
-      setTooltip({
-        x:
-          cellRect.left -
-          rect.left +
-          graphRef.current.scrollLeft +
-          CELL_SIZE / 2,
-        y: cellRect.top - rect.top - 8,
-        date: contribution.date,
-        count: contribution.count,
-      });
-    },
-    []
-  );
-
-  const handleCellLeave = useCallback(() => {
-    setTooltip(null);
-  }, []);
 
   if (!mounted) {
     return (
@@ -393,14 +352,7 @@ export function GitHubContributions({
                               ? colors[day.level]
                               : "transparent",
                             transition: "background-color 0.15s ease",
-                            cursor: day ? "pointer" : "default",
                           }}
-                          onMouseEnter={
-                            day
-                              ? (e) => handleCellEnter(e, day)
-                              : undefined
-                          }
-                          onMouseLeave={day ? handleCellLeave : undefined}
                         />
                       ))
                     )}
@@ -413,35 +365,6 @@ export function GitHubContributions({
               </div>
             )}
 
-            {/* Tooltip */}
-            {tooltip && (
-              <div
-                className="absolute pointer-events-none z-20"
-                style={{
-                  left: tooltip.x,
-                  top: tooltip.y,
-                  transform: "translate(-50%, -100%)",
-                }}
-              >
-                <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-md shadow-lg px-3 py-2 text-xs whitespace-nowrap">
-                  <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                    {tooltip.count} contribution
-                    {tooltip.count !== 1 ? "s" : ""}{" "}
-                  </p>
-                  <p className="text-neutral-500 dark:text-neutral-400 mt-0.5">
-                    {formatDate(tooltip.date)}
-                  </p>
-                </div>
-                <div
-                  className="mx-auto w-2 h-2 bg-white dark:bg-neutral-900 border-b border-r border-neutral-200 dark:border-neutral-800"
-                  style={{
-                    transform: "rotate(45deg) translateX(-50%)",
-                    marginTop: -5,
-                    marginLeft: "calc(50% - 4px)",
-                  }}
-                />
-              </div>
-            )}
           </div>
         </div>
       </motion.div>
