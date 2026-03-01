@@ -29,11 +29,12 @@ export function LogEntry({
 
   return (
     <motion.div
+      id={dateSlug ? `log-${dateSlug}` : undefined}
       initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay }}
       className={cn(
-        "group relative particle-exclusion",
+        "group relative particle-exclusion scroll-mt-24",
         isTimeline && "pl-8 border-l border-neutral-200 dark:border-neutral-800"
       )}
     >
