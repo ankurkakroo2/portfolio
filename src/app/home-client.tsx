@@ -32,19 +32,39 @@ export function HomeClient({ logs }: HomeClientProps) {
 
     const scroll = () => {
       const el = document.getElementById(target!);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!el) return;
+
+      const top =
+        el.getBoundingClientRect().top + window.scrollY -
+        parseFloat(getComputedStyle(el).scrollMarginTop || "0");
+      const start = window.scrollY;
+      const distance = top - start;
+      const duration = 1200; // ms — slow, deliberate scroll
+      let startTime: number | null = null;
+
+      const ease = (t: number) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      const step = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, start + distance * ease(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      };
+
+      requestAnimationFrame(step);
     };
 
     if (!shouldAnimate) {
-      // No animations — scroll on next frame
-      requestAnimationFrame(scroll);
-      return;
+      // No animations — brief pause so the page settles before scrolling
+      const timer = setTimeout(scroll, 400);
+      return () => clearTimeout(timer);
     }
 
-    // Animations are playing — wait for them to finish, then scroll.
+    // Animations are playing — let them breathe, then scroll.
     // Log entries animate at delay 1.0 + index*0.1 with 0.6s duration.
-    // 2s covers all entries comfortably.
-    const timer = setTimeout(scroll, 2000);
+    const timer = setTimeout(scroll, 2400);
     return () => clearTimeout(timer);
   }, [shouldAnimate]);
 
