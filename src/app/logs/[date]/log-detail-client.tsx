@@ -5,6 +5,7 @@ import { usePageAnimation } from "@/lib/page-animation";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Log {
   date: string;
@@ -20,6 +21,8 @@ interface LogDetailClientProps {
 
 export function LogDetailClient({ log }: LogDetailClientProps) {
   const shouldAnimate = usePageAnimation(`log-${log.filename}`);
+  const router = useRouter();
+  const dateSlug = log.filename.replace(/\.md$/, "");
 
   return (
     <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10 flex-grow [&_a]:text-blue-600/60 [&_a]:dark:text-blue-400/50 [&_a]:no-underline [&_a]:hover:text-blue-600/80 [&_a]:dark:hover:text-blue-400/70">
@@ -31,7 +34,14 @@ export function LogDetailClient({ log }: LogDetailClientProps) {
           className="mb-12"
         >
           <Link
-            href={`/#log-${log.filename.replace(/\.md$/, "")}`}
+            href={`/#log-${dateSlug}`}
+            onClick={(e) => {
+              e.preventDefault();
+              try {
+                sessionStorage.setItem("scroll-to-log", `log-${dateSlug}`);
+              } catch {}
+              router.push("/");
+            }}
             className="inline-flex items-center gap-1.5 text-sm !text-neutral-500 dark:!text-neutral-400 hover:!text-black dark:hover:!text-white transition-colors duration-200"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

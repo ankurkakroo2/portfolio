@@ -5,6 +5,7 @@ import { Hero } from "@/components/sections/hero";
 import { LogEntry } from "@/components/sections/log-entry";
 import { usePageAnimation } from "@/lib/page-animation";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 interface Log {
   date: string;
@@ -20,6 +21,32 @@ interface HomeClientProps {
 
 export function HomeClient({ logs }: HomeClientProps) {
   const shouldAnimate = usePageAnimation("home");
+
+  useEffect(() => {
+    let target: string | null = null;
+    try {
+      target = sessionStorage.getItem("scroll-to-log");
+      if (target) sessionStorage.removeItem("scroll-to-log");
+    } catch {}
+    if (!target) return;
+
+    const scroll = () => {
+      const el = document.getElementById(target!);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    if (!shouldAnimate) {
+      // No animations — scroll on next frame
+      requestAnimationFrame(scroll);
+      return;
+    }
+
+    // Animations are playing — wait for them to finish, then scroll.
+    // Log entries animate at delay 1.0 + index*0.1 with 0.6s duration.
+    // 2s covers all entries comfortably.
+    const timer = setTimeout(scroll, 2000);
+    return () => clearTimeout(timer);
+  }, [shouldAnimate]);
 
   return (
     <main className="min-h-screen transition-colors duration-300 relative">
