@@ -67,6 +67,7 @@ export function HomeClient({ logs }: HomeClientProps) {
                   content={log.content}
                   delay={1.0 + index * 0.1}
                   shouldAnimate={shouldAnimate}
+                  filename={log.filename}
                 />
               ))}
             </div>

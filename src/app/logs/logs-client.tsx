@@ -60,6 +60,7 @@ export function LogsClient({ logs }: LogsClientProps) {
                 content={log.content}
                 delay={0.2 + index * 0.1}
                 shouldAnimate={shouldAnimate}
+                filename={log.filename}
               />
             ))}
           </div>
