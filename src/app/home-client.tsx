@@ -5,6 +5,7 @@ import { Hero } from "@/components/sections/hero";
 import { LogEntry } from "@/components/sections/log-entry";
 import { usePageAnimation } from "@/lib/page-animation";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 interface Log {
   date: string;
@@ -20,6 +21,52 @@ interface HomeClientProps {
 
 export function HomeClient({ logs }: HomeClientProps) {
   const shouldAnimate = usePageAnimation("home");
+
+  useEffect(() => {
+    let target: string | null = null;
+    try {
+      target = sessionStorage.getItem("scroll-to-log");
+      if (target) sessionStorage.removeItem("scroll-to-log");
+    } catch {}
+    if (!target) return;
+
+    const scroll = () => {
+      const el = document.getElementById(target!);
+      if (!el) return;
+
+      const top =
+        el.getBoundingClientRect().top + window.scrollY -
+        parseFloat(getComputedStyle(el).scrollMarginTop || "0");
+      const start = window.scrollY;
+      const distance = top - start;
+      const duration = 1200; // ms — slow, deliberate scroll
+      let startTime: number | null = null;
+
+      const ease = (t: number) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      const step = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, start + distance * ease(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      };
+
+      requestAnimationFrame(step);
+    };
+
+    if (!shouldAnimate) {
+      // No animations — brief pause so the page settles before scrolling
+      const timer = setTimeout(scroll, 400);
+      return () => clearTimeout(timer);
+    }
+
+    // Animations are playing — let them breathe, then scroll.
+    // Log entries animate at delay 1.0 + index*0.1 with 0.6s duration.
+    const timer = setTimeout(scroll, 2400);
+    return () => clearTimeout(timer);
+  }, [shouldAnimate]);
 
   return (
     <main className="min-h-screen transition-colors duration-300 relative">
@@ -67,6 +114,7 @@ export function HomeClient({ logs }: HomeClientProps) {
                   content={log.content}
                   delay={1.0 + index * 0.1}
                   shouldAnimate={shouldAnimate}
+                  filename={log.filename}
                 />
               ))}
             </div>
