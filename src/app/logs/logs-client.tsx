@@ -4,6 +4,8 @@ import { LogEntry } from "@/components/sections/log-entry";
 import { usePageAnimation } from "@/lib/page-animation";
 import { motion } from "framer-motion";
 
+import Link from "next/link";
+
 interface Log {
   date: string;
   heading: string;
@@ -52,16 +54,20 @@ export function LogsClient({ logs }: LogsClientProps) {
           </motion.div>
         ) : (
           <div className="space-y-16 pb-12">
-            {logs.map((log, index) => (
-              <LogEntry
-                key={log.filename}
-                date={log.date}
-                heading={log.heading}
-                content={log.content}
-                delay={0.2 + index * 0.1}
-                shouldAnimate={shouldAnimate}
-              />
-            ))}
+            {logs.map((log, index) => {
+              const dateSlug = log.filename.replace('.md', '');
+              return (
+                <Link key={log.filename} href={`/logs/${dateSlug}`} className="block group">
+                  <LogEntry
+                    date={log.date}
+                    heading={log.heading}
+                    content={log.content}
+                    delay={0.2 + index * 0.1}
+                    shouldAnimate={shouldAnimate}
+                  />
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
