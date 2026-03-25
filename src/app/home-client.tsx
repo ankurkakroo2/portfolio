@@ -5,7 +5,7 @@ import { Hero } from "@/components/sections/hero";
 import { LogEntry } from "@/components/sections/log-entry";
 import { usePageAnimation } from "@/lib/page-animation";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Log {
   date: string;
@@ -19,8 +19,11 @@ interface HomeClientProps {
   logs: Log[];
 }
 
+const INITIAL_LOG_COUNT = 5;
+
 export function HomeClient({ logs }: HomeClientProps) {
   const shouldAnimate = usePageAnimation("home");
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     let target: string | null = null;
@@ -106,19 +109,36 @@ export function HomeClient({ logs }: HomeClientProps) {
                 </p>
               </motion.div>
             ) : (
-              <div className="space-y-16 pb-12">
-                {logs.map((log, index) => (
-                  <LogEntry
-                    key={log.filename}
-                    date={log.date}
-                    heading={log.heading}
-                    content={log.content}
-                    delay={1.0 + index * 0.1}
-                    shouldAnimate={shouldAnimate}
-                    filename={log.filename}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="space-y-16 pb-12">
+                  {(showAll ? logs : logs.slice(0, INITIAL_LOG_COUNT)).map((log, index) => (
+                    <LogEntry
+                      key={log.filename}
+                      date={log.date}
+                      heading={log.heading}
+                      content={log.content}
+                      delay={1.0 + index * 0.1}
+                      shouldAnimate={shouldAnimate}
+                      filename={log.filename}
+                    />
+                  ))}
+                </div>
+                {!showAll && logs.length > INITIAL_LOG_COUNT && (
+                  <motion.div
+                    initial={shouldAnimate ? { opacity: 0 } : false}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 1.5 }}
+                    className="text-center pt-4"
+                  >
+                    <button
+                      onClick={() => setShowAll(true)}
+                      className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors underline underline-offset-4"
+                    >
+                      Show all {logs.length} logs
+                    </button>
+                  </motion.div>
+                )}
+              </>
             )}
           </div>
         </div>

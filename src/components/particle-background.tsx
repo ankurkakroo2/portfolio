@@ -91,8 +91,13 @@ export function ParticleBackground() {
             const cols = Math.ceil(canvas.width / spacing);
             const rows = Math.ceil(canvas.height / spacing);
 
+            const maxParticles = 3000;
+            const totalParticles = cols * rows;
+            const skip = totalParticles > maxParticles ? Math.ceil(totalParticles / maxParticles) : 1;
+
             for (let i = 0; i < cols; i++) {
                 for (let j = 0; j < rows; j++) {
+                    if ((i * rows + j) % skip !== 0) continue;
                     const x = i * spacing + Math.random() * 5;
                     const y = j * spacing + Math.random() * 5;
                     particlesRef.current.push({
@@ -263,26 +268,26 @@ export function ParticleBackground() {
 
                 // Draw particle
                 if (particle.opacity > 0.01) {
-                    ctx.beginPath();
-                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-
                     if (isDark) {
-                        // Dark mode: Blue-white glow (optimized shadows)
+                        // Dark mode: Blue-white glow (cheap double-draw instead of shadowBlur)
                         const alpha = particle.opacity * fadeInProgress * (0.3 + shimmerOpacity * 0.2);
+                        // Cheap glow: draw a larger, more transparent circle behind
+                        ctx.fillStyle = `hsla(200, 100%, 80%, ${alpha * 0.3})`;
+                        ctx.beginPath();
+                        ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Main particle
                         ctx.fillStyle = `hsla(200, 100%, 80%, ${alpha})`;
-                        ctx.shadowBlur = 8 * particle.opacity * fadeInProgress;
-                        ctx.shadowColor = `hsla(200, 100%, 60%, ${particle.opacity * fadeInProgress * 0.5})`;
+                        ctx.beginPath();
+                        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                        ctx.fill();
                     } else {
                         // Light mode: Subtle gray-blue
                         const alpha = particle.opacity * fadeInProgress * (0.4 + shimmerOpacity * 0.2);
                         ctx.fillStyle = `hsla(210, 20%, 30%, ${alpha})`;
-                        ctx.shadowBlur = 0;
-                    }
-                    ctx.fill();
-
-                    // Reset shadow for next particle (performance optimization)
-                    if (isDark) {
-                        ctx.shadowBlur = 0;
+                        ctx.beginPath();
+                        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                        ctx.fill();
                     }
 
                     // Draw connections
