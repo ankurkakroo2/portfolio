@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Ankur Kakroo",
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description,
     },

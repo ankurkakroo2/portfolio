@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/profile.jpg",
-        width: 800,
-        height: 800,
+        width: 400,
+        height: 400,
         alt: "Ankur Kakroo",
       },
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Ankur Kakroo - Director of Engineering",
     description: "Director of Engineering with expertise in platform engineering, product development, and team building.",
     images: ["/profile.jpg"],
@@ -82,6 +82,28 @@ export default function RootLayout({
           {/* <ChatWidget /> */}
         </ThemeProvider>
         <Analytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Ankur Kakroo",
+              jobTitle: "Director of Engineering",
+              url: "https://ankurkakroo.in",
+              email: "ankurkakroo2@gmail.com",
+              sameAs: [
+                "https://github.com/ankurkakroo2",
+                "https://www.linkedin.com/in/akakro/",
+              ],
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Gurugram",
+                addressCountry: "India",
+              },
+            }),
+          }}
+        />
       </body>
     </html>
   );
