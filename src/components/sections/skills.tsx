@@ -11,6 +11,7 @@ interface SkillsProps {
 export function Skills({ delay = 0, shouldAnimate = true }: SkillsProps) {
     return (
         <motion.section
+            aria-label="Skills"
             className="py-20 space-y-12"
             initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}

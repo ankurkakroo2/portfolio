@@ -334,6 +334,8 @@ export function ParticleBackground() {
     return (
         <canvas
             ref={canvasRef}
+            aria-hidden="true"
+            role="presentation"
             className="fixed inset-0 pointer-events-none z-0"
         />
     );

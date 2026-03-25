@@ -11,6 +11,7 @@ interface ExperienceProps {
 export function Experience({ delay = 0, shouldAnimate = true }: ExperienceProps) {
     return (
         <motion.section
+            aria-label="Work experience"
             className="py-20 space-y-12"
             initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}

@@ -69,62 +69,65 @@ export function HomeClient({ logs }: HomeClientProps) {
   }, [shouldAnimate]);
 
   return (
-    <main className="min-h-screen transition-colors duration-300 relative">
-      <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
-        <Hero delay={0} shouldAnimate={shouldAnimate} />
-        <GitHubContributions delay={0.4} shouldAnimate={shouldAnimate} />
-        <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
+    <>
+      <main id="main-content" className="min-h-screen transition-colors duration-300 relative">
+        <div className="container mx-auto px-6 md:px-12 max-w-4xl relative z-10">
+          <Hero delay={0} shouldAnimate={shouldAnimate} />
+          <GitHubContributions delay={0.4} shouldAnimate={shouldAnimate} />
+          <div className="h-px w-full bg-neutral-200 dark:bg-neutral-800" />
 
-        <div className="py-16 particle-exclusion [&_a]:text-blue-600/60 [&_a]:dark:text-blue-400/50 [&_a]:no-underline [&_a]:hover:text-blue-600/80 [&_a]:dark:hover:text-blue-400/70">
-          <motion.div
-            initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-serif font-light tracking-tight mb-4">
-              Log
-            </h2>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
-              Thinking out loud while building
-            </p>
-          </motion.div>
-
-          {logs.length === 0 ? (
+          <div className="py-16 particle-exclusion [&_a]:text-blue-600/60 [&_a]:dark:text-blue-400/50 [&_a]:no-underline [&_a]:hover:text-blue-600/80 [&_a]:dark:hover:text-blue-400/70">
             <motion.div
               initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.0 }}
-              className="py-20 text-center"
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="mb-16"
             >
-              <p className="text-lg text-neutral-400 dark:text-neutral-500 mb-4">
-                No logs yet
-              </p>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-sm mx-auto">
-                This is where weekly progress goes. Use the <code className="text-xs bg-neutral-100 dark:bg-neutral-900 px-2 py-1 rounded">/add-log</code> skill to start documenting.
+              <h2 className="text-4xl md:text-5xl font-serif font-light tracking-tight mb-4">
+                Log
+              </h2>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                Thinking out loud while building
               </p>
             </motion.div>
-          ) : (
-            <div className="space-y-16 pb-12">
-              {logs.map((log, index) => (
-                <LogEntry
-                  key={log.filename}
-                  date={log.date}
-                  heading={log.heading}
-                  content={log.content}
-                  delay={1.0 + index * 0.1}
-                  shouldAnimate={shouldAnimate}
-                  filename={log.filename}
-                />
-              ))}
-            </div>
-          )}
-        </div>
 
-        <footer className="py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
+            {logs.length === 0 ? (
+              <motion.div
+                initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
+                className="py-20 text-center"
+              >
+                <p className="text-lg text-neutral-400 dark:text-neutral-500 mb-4">
+                  No logs yet
+                </p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-sm mx-auto">
+                  This is where weekly progress goes. Use the <code className="text-xs bg-neutral-100 dark:bg-neutral-900 px-2 py-1 rounded">/add-log</code> skill to start documenting.
+                </p>
+              </motion.div>
+            ) : (
+              <div className="space-y-16 pb-12">
+                {logs.map((log, index) => (
+                  <LogEntry
+                    key={log.filename}
+                    date={log.date}
+                    heading={log.heading}
+                    content={log.content}
+                    delay={1.0 + index * 0.1}
+                    shouldAnimate={shouldAnimate}
+                    filename={log.filename}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+      <footer className="py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
+        <div className="container mx-auto px-6 md:px-12 max-w-4xl">
           <p>© {new Date().getFullYear()} Ankur Kakroo. All rights reserved.</p>
-        </footer>
-      </div>
-    </main>
+        </div>
+      </footer>
+    </>
   );
 }

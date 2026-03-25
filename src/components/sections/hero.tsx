@@ -11,7 +11,7 @@ interface HeroProps {
 
 export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
     return (
-        <section className="pt-20 md:pt-28 pb-8">
+        <section aria-label="Introduction" className="pt-20 md:pt-28 pb-8">
             <motion.div
                 initial={shouldAnimate ? "hidden" : false}
                 animate="visible"
@@ -85,6 +85,7 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                         href={RESUME_DATA.contact.github}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="GitHub (opens in new tab)"
                         className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
                     >
                         <Github className="h-4 w-4" />
@@ -94,6 +95,7 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                         href={RESUME_DATA.contact.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="LinkedIn (opens in new tab)"
                         className="flex items-center gap-2 hover:text-black dark:hover:text-white transition-colors"
                     >
                         <Linkedin className="h-4 w-4" />
