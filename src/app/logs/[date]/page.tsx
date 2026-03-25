@@ -22,9 +22,27 @@ export async function generateMetadata({
     return { title: "Log Not Found" };
   }
 
+  const title = `${log.heading} - Ankur Kakroo`;
+  const description = log.content.slice(0, 160).replace(/\n/g, " ");
+
   return {
-    title: `${log.heading} - Ankur Kakroo`,
-    description: log.content.slice(0, 160).replace(/\n/g, " "),
+    title,
+    description,
+    openGraph: {
+      type: "article",
+      url: `https://ankurkakroo.in/logs/${date}`,
+      title,
+      description,
+      siteName: "Ankur Kakroo",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: `https://ankurkakroo.in/logs/${date}`,
+    },
   };
 }
 
