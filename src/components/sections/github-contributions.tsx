@@ -253,7 +253,7 @@ export function GitHubContributions({
     : "from-white";
 
   return (
-    <div className="particle-exclusion pb-12">
+    <div className="particle-exclusion pb-12" aria-label="GitHub contribution graph">
       <motion.div
         initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
         animate={{ opacity: 1, y: 0 }}
@@ -284,7 +284,8 @@ export function GitHubContributions({
             {loading ? (
               <SkeletonGraph isDark={isDark} />
             ) : data && weeks.length > 0 ? (
-              <div style={{ width: gridWidth, minWidth: gridWidth }}>
+              <div role="img" style={{ width: gridWidth, minWidth: gridWidth }}>
+                <span className="sr-only">{data.total[Object.keys(data.total)[0]]} contributions in the last year</span>
                 {/* Month labels */}
                 <div
                   className="relative text-xs text-neutral-400 dark:text-neutral-500"
@@ -344,6 +345,7 @@ export function GitHubContributions({
                       week.map((day, dayIdx) => (
                         <div
                           key={`${weekIdx}-${dayIdx}`}
+                          title={day ? `${day.count} contribution${day.count !== 1 ? 's' : ''} on ${day.date}` : undefined}
                           style={{
                             width: CELL_SIZE,
                             height: CELL_SIZE,

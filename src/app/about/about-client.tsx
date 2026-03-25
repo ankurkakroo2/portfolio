@@ -5,7 +5,7 @@ import { Experience } from "@/components/sections/experience";
 import { Skills } from "@/components/sections/skills";
 import { usePageAnimation } from "@/lib/page-animation";
 
-export default function AboutPage() {
+export default function AboutClient() {
   const shouldAnimate = usePageAnimation("about");
 
   return (
