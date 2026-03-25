@@ -11,6 +11,7 @@ interface EducationProps {
 export function Education({ delay = 0, shouldAnimate = true }: EducationProps) {
     return (
         <motion.section
+            aria-label="Education"
             className="py-20 space-y-12"
             initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
