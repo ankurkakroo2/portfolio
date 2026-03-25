@@ -1,4 +1,5 @@
 import fs from "fs";
+import { readFile, readdir } from "fs/promises";
 import path from "path";
 
 export interface LogEntry {
@@ -17,46 +18,50 @@ export async function getLogs(): Promise<LogEntry[]> {
     return [];
   }
 
-  const filenames = fs.readdirSync(logsDirectory);
+  const filenames = await readdir(logsDirectory);
 
-  const logs: LogEntry[] = filenames
-    .filter((filename) => filename.endsWith(".md"))
-    .map((filename) => {
-      const filePath = path.join(logsDirectory, filename);
-      const raw = fs.readFileSync(filePath, "utf8");
+  const mdFiles = filenames.filter((filename) => filename.endsWith(".md"));
 
-      // Extract frontmatter heading and strip it from content
-      const frontmatterMatch = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-      const heading = frontmatterMatch
-        ? (frontmatterMatch[1].match(/^heading:\s*(.+)$/m)?.[1] ?? "")
-        : "";
-      const content = frontmatterMatch ? frontmatterMatch[2] : raw;
+  const logs: LogEntry[] = (
+    await Promise.all(
+      mdFiles.map(async (filename) => {
+        const filePath = path.join(logsDirectory, filename);
+        const raw = await readFile(filePath, "utf8");
 
-      // Extract date from filename (format: YYYY-MM-DD.md)
-      const dateMatch = filename.match(/^(\d{4})-(\d{2})-(\d{2})\.md$/);
+        // Extract frontmatter heading and strip it from content
+        const frontmatterMatch = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+        const heading = frontmatterMatch
+          ? (frontmatterMatch[1].match(/^heading:\s*(.+)$/m)?.[1] ?? "")
+          : "";
+        const content = frontmatterMatch ? frontmatterMatch[2] : raw;
 
-      if (!dateMatch) {
-        return null;
-      }
+        // Extract date from filename (format: YYYY-MM-DD.md)
+        const dateMatch = filename.match(/^(\d{4})-(\d{2})-(\d{2})\.md$/);
 
-      const [, year, month, day] = dateMatch;
-      const timestamp = new Date(`${year}-${month}-${day}`);
+        if (!dateMatch) {
+          return null;
+        }
 
-      // Format date as "Month Day, Year"
-      const date = timestamp.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
+        const [, year, month, day] = dateMatch;
+        const timestamp = new Date(`${year}-${month}-${day}`);
 
-      return {
-        date,
-        heading,
-        filename,
-        content,
-        timestamp,
-      };
-    })
+        // Format date as "Month Day, Year"
+        const date = timestamp.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        return {
+          date,
+          heading,
+          filename,
+          content,
+          timestamp,
+        };
+      })
+    )
+  )
     .filter((log): log is LogEntry => log !== null)
     .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()); // Newest first
 
@@ -77,7 +82,7 @@ export async function getLogByDate(date: string): Promise<LogEntry | null> {
     return null;
   }
 
-  const raw = fs.readFileSync(filePath, "utf8");
+  const raw = await readFile(filePath, "utf8");
 
   // Extract frontmatter heading and strip it from content
   const frontmatterMatch = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
@@ -111,8 +116,8 @@ export async function getAllLogDates(): Promise<string[]> {
     return [];
   }
 
-  return fs
-    .readdirSync(logsDirectory)
+  const filenames = await readdir(logsDirectory);
+  return filenames
     .filter((f) => f.endsWith(".md"))
     .map((f) => f.replace(/\.md$/, ""));
 }
