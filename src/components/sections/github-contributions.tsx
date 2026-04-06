@@ -367,6 +367,11 @@ export function GitHubContributions({
 
           </div>
         </div>
+        {!loading && data && (
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 text-center mt-2 md:hidden">
+            Swipe to see more
+          </p>
+        )}
       </motion.div>
     </div>
   );
