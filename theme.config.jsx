@@ -16,6 +16,10 @@ export default {
       {
         url: 'https://github.com/shuding/nextra',
         name: 'Nextra'
+      },
+      {
+        url: '/hackernews',
+        name: 'Hacker News'
       }
     ]
   }

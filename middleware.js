@@ -20,6 +20,7 @@ export function middleware(request) {
   const shouldHandleLocale =
     !/^\/(api|_next)\//.test(nextUrl.pathname) &&
     !/\.(jpe?g|svg|png|webmanifest)$/.test(nextUrl.pathname) &&
+    !/^\/hackernews/.test(nextUrl.pathname) &&
     nextUrl.locale !== '' &&
     // not Server-Side Error page
     nextUrl.pathname !== '/500'
