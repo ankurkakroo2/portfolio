@@ -30,6 +30,16 @@ export function Navigation() {
         >
           About
         </Link>
+        <Link
+          href="/hackernews"
+          prefetch={true}
+          className={`text-sm font-medium transition-colors duration-200 hover:text-black dark:hover:text-white ${pathname === "/hackernews" || pathname.startsWith("/hackernews/")
+            ? "text-black dark:text-white"
+            : "text-neutral-500 dark:text-neutral-400"
+          }`}
+        >
+          HN Trends
+        </Link>
         <div className="h-4 w-px bg-neutral-300 dark:bg-neutral-700" />
         <ThemeToggle />
       </nav>
