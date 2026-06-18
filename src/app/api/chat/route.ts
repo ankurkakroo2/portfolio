@@ -1,6 +1,7 @@
 import { RESUME_DATA } from '@/lib/data';
+import { validateMessages, isRateLimited } from '@/lib/chat-validation';
 import { createOpenAI } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { streamText, type CoreMessage } from 'ai';
 
 const openai = createOpenAI({
     apiKey: process.env.OPENAI_API_KEY || '',
@@ -9,7 +10,42 @@ const openai = createOpenAI({
 export const runtime = 'edge';
 
 export async function POST(req: Request) {
-    const { messages } = await req.json();
+    // Check for API key
+    if (!process.env.OPENAI_API_KEY) {
+        return new Response(
+            JSON.stringify({ error: 'Chat is not configured' }),
+            { status: 503, headers: { 'Content-Type': 'application/json' } }
+        );
+    }
+
+    // Rate limiting
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (isRateLimited(ip)) {
+        return new Response(
+            JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+            { status: 429, headers: { 'Content-Type': 'application/json' } }
+        );
+    }
+
+    // Parse and validate request body
+    let body: unknown;
+    try {
+        body = await req.json();
+    } catch {
+        return new Response(
+            JSON.stringify({ error: 'Invalid JSON' }),
+            { status: 400, headers: { 'Content-Type': 'application/json' } }
+        );
+    }
+
+    const { messages } = body as { messages: unknown };
+
+    if (!validateMessages(messages)) {
+        return new Response(
+            JSON.stringify({ error: 'Invalid messages format' }),
+            { status: 400, headers: { 'Content-Type': 'application/json' } }
+        );
+    }
 
     // Create knowledge base from resume data
     const knowledgeBase = `
@@ -67,7 +103,7 @@ When answering questions:
 ${knowledgeBase}
 
 Remember: You're having a conversation on your personal portfolio website. Be welcoming, helpful, and authentic.`,
-        messages,
+        messages: messages as CoreMessage[],
         temperature: 0.7,
     });
 
