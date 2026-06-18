@@ -39,7 +39,7 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                         <img
                             src="/profile.jpg"
                             alt="Ankur Kakroo"
-                            className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                            className="w-full h-full object-cover grayscale-0 md:grayscale md:hover:grayscale-0 transition-all duration-700"
                         />
                     </div>
                 </motion.div>

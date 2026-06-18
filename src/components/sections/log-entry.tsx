@@ -46,7 +46,7 @@ export function LogEntry({
       {isTimeline && dateSlug && (
         <Link
           href={`/logs/${dateSlug}`}
-          className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-1 text-neutral-400 hover:text-neutral-600 dark:text-neutral-600 dark:hover:text-neutral-300"
+          className="absolute top-0 right-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 p-1 text-neutral-400 hover:text-neutral-600 dark:text-neutral-600 dark:hover:text-neutral-300"
           aria-label={`Read "${heading}"`}
         >
           <ArrowRight className="h-4 w-4" />

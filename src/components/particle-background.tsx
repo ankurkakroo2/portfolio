@@ -116,6 +116,15 @@ export function ParticleBackground() {
             mouseRef.current = { x: e.clientX, y: e.clientY };
         };
 
+        // Touch handlers for mobile support
+        const handleTouchMove = (e: TouchEvent) => {
+            mouseRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        };
+
+        const handleTouchEnd = () => {
+            mouseRef.current = { x: -1000, y: -1000 };
+        };
+
         // Scroll handler - hide particles during scroll
         const handleScroll = () => {
             // Only set scrolling flag if not already scrolling (reduces redundant state changes)
@@ -315,12 +324,16 @@ export function ParticleBackground() {
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
         window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("touchmove", handleTouchMove, { passive: true });
+        window.addEventListener("touchend", handleTouchEnd);
         window.addEventListener("scroll", handleScroll, { passive: true });
         animate();
 
         return () => {
             window.removeEventListener("resize", resizeCanvas);
             window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("touchmove", handleTouchMove);
+            window.removeEventListener("touchend", handleTouchEnd);
             window.removeEventListener("scroll", handleScroll);
             if (animationFrameRef.current) {
                 cancelAnimationFrame(animationFrameRef.current);
