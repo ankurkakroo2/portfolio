@@ -3,6 +3,7 @@
 import { RESUME_DATA } from "@/lib/data";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, MapPin } from "lucide-react";
+import Image from "next/image";
 
 interface HeroProps {
     delay?: number;
@@ -36,9 +37,12 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                     className="mb-8"
                 >
                     <div className="w-40 h-40 md:w-44 md:h-44 mx-auto rounded-full overflow-hidden border-2 border-neutral-200 dark:border-neutral-800 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105">
-                        <img
+                        <Image
                             src="/profile.jpg"
                             alt="Ankur Kakroo"
+                            width={400}
+                            height={400}
+                            priority
                             className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
                         />
                     </div>
