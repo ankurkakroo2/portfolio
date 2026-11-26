@@ -14,11 +14,11 @@ export const RESUME_DATA = {
     currentWork: [
         {
             title: "AI platform",
-            description: "Built the shared infrastructure behind HackerRank’s AI products.",
+            description: "Shared infrastructure behind HackerRank’s AI products, processing 15B+ tokens per day.",
         },
         {
             title: "Chakra",
-            description: "Built an AI interviewer that asks questions, watches candidates code, and digs into their decisions.",
+            description: "An AI interviewer that asks questions, watches candidates code, and digs into their decisions.",
         },
         {
             title: "Next-gen",
