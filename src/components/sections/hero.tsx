@@ -11,7 +11,7 @@ interface HeroProps {
 
 export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
     return (
-        <section className="pt-20 md:pt-28 pb-8">
+        <section className="pt-20 md:pt-28 pb-16">
             <motion.div
                 initial={shouldAnimate ? "hidden" : false}
                 animate="visible"
@@ -105,19 +105,20 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                     </span>
                 </motion.div>
 
-                <div className="pt-4 text-lg leading-relaxed text-neutral-700 dark:text-neutral-300 space-y-4 particle-exclusion">
-                    {RESUME_DATA.profile.map((paragraph, index) => (
-                        <motion.p
-                            key={index}
+                <ul aria-label="Current work" className="pt-4 text-lg leading-relaxed text-neutral-700 dark:text-neutral-300 space-y-5 particle-exclusion">
+                    {RESUME_DATA.currentWork.map((work) => (
+                        <motion.li
+                            key={work.title}
                             variants={{
                                 hidden: { opacity: 0, y: 20 },
                                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
                             }}
                         >
-                            {paragraph}
-                        </motion.p>
+                            <span className="font-semibold text-neutral-900 dark:text-neutral-100">{work.title}:</span>{" "}
+                            {work.description}
+                        </motion.li>
                     ))}
-                </div>
+                </ul>
             </motion.div>
         </section>
     );

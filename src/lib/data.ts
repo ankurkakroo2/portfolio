@@ -11,6 +11,24 @@ export const RESUME_DATA = {
         "I’m an asymmetric engineering leader for the AI era with strong business, product, and design sense. I think in second order, which shapes how I hire, build teams, and make decisions.",
         "I maintain a high bar for quality, whether it is maintaining talent density, the clarity of a document, the copy in an error message, or a UI detail that is off. I have experience in both B2C and B2B products, including building from zero to one. I care deeply about platforms and over the years I have built several that are both reliable and scalable.",
     ],
+    currentWork: [
+        {
+            title: "AI platform",
+            description: "Built the shared infrastructure behind HackerRank’s AI products.",
+        },
+        {
+            title: "Chakra",
+            description: "Built an AI interviewer that asks questions, watches candidates code, and digs into their decisions.",
+        },
+        {
+            title: "Next-gen",
+            description: "Leading HackerRank’s strategy for hiring AI-fluent engineers. Working directly with enterprise CTOs and CIOs to put it into practice.",
+        },
+        {
+            title: "Making HackerRank AI-pilled",
+            description: "Building company agents that take on work, show their work, and learn as they go. Getting the company to work differently along with them.",
+        },
+    ],
     coreSkills: [
         {
             title: "Altitude & Range",
