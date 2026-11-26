@@ -63,7 +63,10 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                         }}
                         className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 font-serif font-medium tracking-[0.2em] uppercase text-center mt-4"
                     >
-                        {RESUME_DATA.title}
+                        {RESUME_DATA.title}{" "}
+                        <span className="inline-block text-sm md:text-base font-normal normal-case tracking-normal text-neutral-500 dark:text-neutral-500">
+                            @hackerrank
+                        </span>
                     </motion.h2>
                 </div>
 
