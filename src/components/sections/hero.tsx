@@ -105,7 +105,10 @@ export function Hero({ delay = 0, shouldAnimate = true }: HeroProps) {
                     </span>
                 </motion.div>
 
-                <ul aria-label="Current work" className="pt-4 text-lg leading-relaxed text-neutral-700 dark:text-neutral-300 space-y-5 particle-exclusion">
+                <h2 id="current-work-heading" className="pt-4 text-xl font-medium tracking-tight particle-exclusion">
+                    Currently focusing on:
+                </h2>
+                <ul aria-labelledby="current-work-heading" className="text-lg leading-relaxed text-neutral-700 dark:text-neutral-300 space-y-5 particle-exclusion">
                     {RESUME_DATA.currentWork.map((work) => (
                         <motion.li
                             key={work.title}
